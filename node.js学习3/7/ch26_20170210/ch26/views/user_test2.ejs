@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%=title%></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+<body>
+    <div class="form-container">
+        <p class="form-header">用户信息</p>
+        <form>
+            <label>用户名:</label>
+            <input type="text" name="username" value=<%=user.username%>><br>
+            <label>邮箱:</label>
+            <input type="email" name="email" value=<%=user.email%>><br>
+            <label>喜欢的颜色:</label>
+            <input type="text" name="color" value=<%=user.color%>><br>
+        </form>
+    </div>
+    <hr>
+ 
+    <form method="post">
+        <input type="text" name="username">
+        <input type="submit" value="查询用户">
+    </form>
+    <hr>
+    <%=msg%>
+    <hr>
+</body>
+</html>

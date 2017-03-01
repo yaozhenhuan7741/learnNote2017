@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script src="javascripts/jquery-1.11.3.min.js"></script>
+    <script>
+        $(function () {
+            $.get('/user/profile',function (user) {
+                //alert(user.username);
+                $('input[name="username"]').val(user.username);
+                $('input[name="email"]').val(user.email);
+                $('input[name="color"]').val(user.color);
+
+            });
+        });
+    </script>
+</head>
+<body>
+
+
+
+    <div class="form-container">
+        <p class="form-header">用户信息</p>
+        <form method="post" action="/user/update">
+            <label>用户名:</label>
+            <input type="text" name="username"><br>
+            <label>邮箱:</label>
+            <input type="email" name="email"><br>
+            <label>喜欢的颜色:</label>
+            <input type="text" name="color"><br>
+            <input type="submit" value="保存">
+        </form>
+    </div>
+    <hr>
+
+    <form method="post" action="/user/delete">
+        <input type="submit" value="删除用户">
+    </form>
+    <hr>
+    <%=msg%>
+    <hr>
+</body>
+</html>

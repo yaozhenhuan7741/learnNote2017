@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html ng-app="testApp">
+<head>
+    <title><%=title%></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+<body>
+    <div class="form-container">
+        <p class="form-header">用户信息</p>
+        <form ng-controller="testCtrl">
+            <label>用户名:</label>
+            <input type="text" name="username" ng-model="user.username"><br>
+            <label>邮箱:</label>
+            <input type="email" name="email" ng-model="user.email"><br>
+            <label>喜欢的颜色:</label>
+            <input type="text" name="color" ng-model="user.color"><br>
+        </form>
+    </div>
+    <hr>
+
+    <hr>
+
+    <hr>
+    <script src="javascripts/angular.min.js"></script>
+    <script>
+        angular.module('testApp',[]).
+            controller('testCtrl',['$scope','$http',
+            function ($scope,$http) {
+            $http.get('/user/profile3').success(function (data,status,headers,config) {
+                $scope.user = data;
+            })
+        }])
+    </script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+<% include header.ejs %>
+  <div class="form-container">
+    <p class="form-header">注册</p>
+    <form method="POST">
+      <label>用户名：</label>
+      <input type="text" name="username"><br>
+      <label>密码：</label>
+      <input type="password" name="password"><br>
+      <label>邮箱：</label>
+      <input type="email" name="email"><br>
+      <input type="submit" value="注册">
+    </form>
+  </div>
+
+  <hr>
+  <%=msg%>
+<% include footer.ejs %>
