@@ -1,0 +1,20 @@
+1.生成私钥
+openssl genrsa -out server.pem 2048
+2.生成证书签名请求文件
+openssl req -new -key server.pem -out server.csr  //windows下有可能报错找不到openssl.cnf 使用下面的语句
+openssl req -new -key server.pem -out server.csr -config ".\openssl.cnf"  //指定配置文件位置
+回答问题。。。。
+Country Name (2 letter code) [XX]:CN   #国家代码（中国）
+State or Province Name (full name) []:BeiJing   #省（北京）
+Locality Name (eg, city) [Default City]:BeiJing   #市（北京）
+Organization Name (eg, company) [Default Company Ltd]:Dos2unix   #公司名称
+Organizational Unit Name (eg, section) []:   #可不填
+Common Name (eg, your name or your server's hostname) []:   #可不填
+Email Address []:l_ichen@126.com   #邮箱
+
+Please enter the following 'extra' attributes
+to be sent with your certificate request
+A challenge password []:   #可不填
+An optional company name []:   #可不填
+3.生成自签名证书
+openssl x509 -req -days 365  -signkey server.pem  -in server.csr  -out server.crt
