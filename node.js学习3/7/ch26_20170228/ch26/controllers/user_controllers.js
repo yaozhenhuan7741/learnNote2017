@@ -47,7 +47,7 @@ exports.doLogin=function (req,res) {
                 });
             }else{
                 err='认证失败！';
-            };
+            }
             if(err){
                 req.session.regenerate(function () {
                     req.session.msg=err;
@@ -56,4 +56,79 @@ exports.doLogin=function (req,res) {
                 });
             }
         });
+};
+
+//用户信息--查询用户表中用户信息，跳转到用户信息页面
+exports.userInfo1=function (req,res) {
+    if(req.session.user){
+        User.findOne({_id:req.session.user})
+            .exec(function (err,user) {
+                if(!user){
+                    req.session.msg='用户信息获取失败，请重新登录！';
+                    res.redirect('/login');
+                }else{
+                    //console.log(user);
+                    //req.session.msg='';
+                    res.render('userinfoA',{user:user,msg:req.session.msg});
+                }
+            });
+    }else{
+        req.session.msg='请先登录！';
+        res.redirect('/login');
+    }
+};
+
+//修改用户信息--修改用户表，完成后跳转到用户信息页面
+exports.doUserUpate=function (req,res) {
+    User.findOne({_id:req.session.user})
+        .exec(function (err,user) {
+            console.log(user);
+            console.log(req.body.email);
+            user.set('email',req.body.email);
+            user.set('color',req.body.color);
+            user.save(function (err) {
+                console.log(err);
+                if(err){
+                    req.session.error=err;
+                }else{
+                    req.session.msg='更新成功!';
+                }
+                res.redirect('/userinfo2');
+            })
+        })
+};
+
+//删除用户--在用户表中删除该用户，完成后跳转到登录页面
+exports.doUserDelete=function (req,res) {
+    User.findOne({_id:req.session.user})
+        .exec(function (err,user) {
+            if(user){
+                user.remove(function (err) {
+                    if(err){
+                        req.session.msg=err;
+                    }else{
+                        req.session.destroy(function () {
+                            res.redirect('/login');
+                        })
+                    }
+                })
+            }else{
+                req.session.msg='改用户不存在！';
+                req.session.destroy(function () {
+                    res.redirect('/login')
+                });
+            }
+        });
+};
+
+//获取用户信息--配合angularjs调用，返回用户信息及json字符串
+exports.getUserInfo=function (req,res) {
+    User.findOne({_id:req.session.user})
+        .exec(function (err,user) {
+            if(!user){
+                res.json(404,'用户不存在!');
+            }else{
+                res.json(user);
+            }
+        })
 };
