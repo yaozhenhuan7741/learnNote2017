@@ -38,7 +38,7 @@ models/       存放模型
 
 路由规划：
 1. get /  定位到 photos.ejs页面
-2. get  /photos  获取图像列表，通过控制器来获取数据，然后显示到页面上部分
+2. get  /photosList  获取图像列表，通过控制器来获取数据，然后显示到页面上部分
 3. get  /photo   获取单张图像信息，显示到页面中部分
 4. get  /page    获取页面信息
 5. get  /comments/get 获取评论信息
