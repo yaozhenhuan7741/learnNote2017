@@ -1,0 +1,76 @@
+1.数据类型
+字符串 String
+数值  Number
+布尔  Boolean
+数组  Array
+对象  Object
+空    Null
+
+2.运算符
+算数运算符 + - ++ -- * / %
+赋值运算符 = += -+ *= /= %=
+比较运算符 ==  === != !== > >= < <=
+逻辑运算符 && || !
+条件运算符
+if(){}else{}  if(){}else if(){}else{}
+switch(表达式){
+    case a:
+    代码;
+    break;
+    case b:
+    代码;
+    break;
+    default:
+    代码
+}
+3.循环
+while(){}
+do{}while();
+for(var i=0;i<len;i++){} //赋值;条件;更新
+for/in循环 var days=[1,2,3,4,5,6,d,f]   for( var idx in days){}
+中断  break  continue
+4.函数、匿名函数
+function 名称(参数){表达式}  使用return返回值
+5.对象
+var x=new Number('5');
+var y={'name':'malei'}  访问对象 y.name  或者 y['name']
+
+对于一次性的对象，以后不再使用的一般使用 {}直接定义对象：简单对象
+对于需要重复使用的，将其封装为函数块
+function User(first,last){
+this.first=first;
+this.last=last;
+this.getName=function(){return this.first+' '+this.last}
+};
+var user=new User('ma','lei');
+原型对象模式，代替上边的this.getName
+User.prototype={
+    getName:function(){return this.first+' '+this.last}
+}
+
+字符串对象常用方法
+charAt charCodeAt concat indexOf lastIndexOf
+match(regex) replace search slice split substr substring valueOf
+
+数组对象常用方法
+concat indexOf join lastIndexOf pop push shift unshift reverse
+slice sort  splice toString valueOf
+
+6.异常 try catch throw finally
+
+try{}catch(err){console.log(err.name+err.message)};
+try{
+    if(xxx) throw{message:xxxxxxx};
+    if(xxx) throw{message:xxxxxxx};
+    if(xxx) throw{message:xxxxxxx};
+}catch(err){
+    err.message
+}finally{}
+7.模块封装
+npm pack
+8.控制台console
+console.log
+console.time console.timeEnd
+9.定时器
+a. 超时 setTimeout(回调函数，时间，[回调函数需要的参数])
+b. 间隔 setInterval(回调函数，时间，[回调函数需要的参数])
