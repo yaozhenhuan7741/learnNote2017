@@ -71,6 +71,37 @@ npm pack
 8.控制台console
 console.log
 console.time console.timeEnd
+
+事件队列相关
+
 9.定时器
 a. 超时 setTimeout(回调函数，时间，[回调函数需要的参数])
 b. 间隔 setInterval(回调函数，时间，[回调函数需要的参数])
+c. 及时 setImmediate(回调函数，参数)   回调函数被放置在事件队列中，并在遍历事件队列循环的每次迭代中，在I/O事件之后执行
+    取消定时器
+    var myInterval=setInterval(myFun);
+    myInterval.unref()  //取消定时器
+d. nextTick() 在事件循环的下一个循环中运行，在I/O事件被触发之前
+
+监听器和发射器
+10.发射器
+将自定义事件添加到JavaScript对象
+方法一: 传统方式
+var events=require('events');
+var emitter=new events.EventEmitter();
+emitter.emit('simpleEvent');
+方法二: 继承的方式
+function MyObj(){
+Events.eventEmitter.call(this);
+}
+MyObj.prototype.__proto__=events.EventEmitter.prototype;
+使用
+var  myobj=new MyObj();
+myobj.emit('someevent');
+11.监听器
+.addListener(eventName,callback); //将回调函数添加到监听器中
+.on(eventName,callback)  //同addListener
+.once(eventName,callback) //事件第一次被触发时执行
+.listeners(eventName) //返回所有添加到事件eventName上的函数数组
+.setMaxListeners(n)   //n默认为10,如果多于n的监听器都加入到EventEmitter对象,就触发报警
+.removeListener(eventName,callback); //将callback函数从eventName事件中删除
