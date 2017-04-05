@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+  <head>
+    <title>图片页面</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel="stylesheet" href="/stylesheets/comments.css">
+  </head>
+  <body>
+    <div ng-controller="photoCtrl">
+      <!--图片列表区开始-->
+      <div id="photoListContainer">
+        <div class="photosList" ng-repeat="photo in photos">
+          <img  class="photoList" ng-src="/images/{{photo.filename}}" />
+        </div>
+      </div>
+      <!--图片列表区结束-->
+    </div>
+    <script src="/javascripts/vender/angular.min.js"></script>
+    <script src="/javascripts/comments_app.js"></script>
+  </body>
+</html>

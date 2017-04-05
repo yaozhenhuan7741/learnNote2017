@@ -22,6 +22,7 @@ exports.addComment=function (req,res) {
             }else {
                 var newComment=Reply(req.body.newComment);
                 newComment.username=generateRandomUsername();
+                //console.log(newComment);
                 addComment(req,res,commentThread,commentThread,req.body.parentCommentId,newComment);
             }
         })
@@ -29,9 +30,12 @@ exports.addComment=function (req,res) {
 
 function addComment(req,res,commentThread,currentComment,parentId,newComment) {
     if(commentThread.id==parentId){
+        console.log('11');
         commentThread.replies.push(newComment);
+        //console.log(commentThread);
         updateCommentThread(req,res,commentThread);
     }else {
+        console.log('22');
         for (var i=0;i<currentComment.replies.length;i++){
             var c=currentComment.replies[i];
             if(c._id==parentId){
@@ -48,9 +52,11 @@ function addComment(req,res,commentThread,currentComment,parentId,newComment) {
 };
 
 function updateCommentThread(req,res,commentThread) {
-    commentThread.update({_id:commentThread.id},{$set:{replies:commentThread.replies}})
+    CommentThread.update({_id:commentThread.id},{$set:{replies:commentThread.replies}})
         .exec(function (err,savedComment) {
+            console.log(savedComment);
             if(err){
+                console.log(err);
                 res.json(404,{msg:'Failed to update commentThread '})
             }else{
                 res.json({msg:'success'});
