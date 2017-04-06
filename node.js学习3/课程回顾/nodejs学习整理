@@ -127,3 +127,30 @@ c.嵌套回调
 例子参见 回调链式callback_chain.js
 
 三、数据处理
+13.JSON
+    JSON字符串转对象JSON.parse(string)
+    JSON对象转字符串JSON.stringify(obj)
+14.buffer缓冲
+创建缓冲区  new Buffer(sizeInBytes)    new Buffer(octerArray)  new Buffer(string,[encoding])
+写入缓冲区  write fill writeInt8 writeInt16LE writeInt16BE 参见例子
+例子参见  缓冲写入buffer_write.js
+读取缓冲区  buffer.toString([encoding],[start],[end]);  stringDecoder.write(buffer);buffer[offset];
+          readInt8 readInt16LE readInt16BE
+例子参见  缓冲读取buffer_read.js
+
+缓冲区长度 应注意缓冲区长度与字符串长度不一样
+
+缓冲区复制 应注意源缓冲区和目标缓冲区编码要一致
+
+例子参见  缓冲复制buffer_copy.js
+
+缓冲区切片   切片与副本不同，切片对原缓冲区有影响，副本与原缓冲区是独立的  slice
+
+例子参见  缓冲切片buffer_slice.js
+
+缓冲区拼接 concat
+
+例子参见  缓冲拼接buffer_concat.js
+
+15.stream流
+
