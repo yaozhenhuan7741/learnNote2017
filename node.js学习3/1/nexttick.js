@@ -1,6 +1,6 @@
 ﻿var fs=require('fs');
-fs.stat("nexttick.js",function (err,stats) {
-    if(stats){console.log("nexttick.js exists");}
+fs.stat("事件队列nexttick.js",function (err,stats) {
+    if(stats){console.log("事件队列nexttick.js exists");}
 });
 setImmediate(function () {
     console.log("Immediate timer 1 executed");

@@ -3,7 +3,7 @@
  */
 //此例子用于展示事件队列执行顺序和各种定时器对事件队列的影响
 var fs=require('fs');
-fs.stat('nexttick.js',function (err,stats) {
+fs.stat('事件队列nexttick.js',function (err,stats) {
     if(stats){
         console.log('I/O事件，nexttick.js存在！')
     }

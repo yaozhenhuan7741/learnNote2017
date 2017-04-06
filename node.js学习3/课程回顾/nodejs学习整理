@@ -83,6 +83,8 @@ c. 及时 setImmediate(回调函数，参数)   回调函数被放置在事件�
     myInterval.unref()  //取消定时器
 d. nextTick() 在事件循环的下一个循环中运行，在I/O事件被触发之前
 
+例子参见 事件队列nexttick.js
+
 监听器和发射器
 10.发射器
 将自定义事件添加到JavaScript对象
@@ -105,3 +107,15 @@ myobj.emit('someevent');
 .listeners(eventName) //返回所有添加到事件eventName上的函数数组
 .setMaxListeners(n)   //n默认为10,如果多于n的监听器都加入到EventEmitter对象,就触发报警
 .removeListener(eventName,callback); //将callback函数从eventName事件中删除
+
+例子参见 监听器发射器试验emitter_listener.js
+
+12.回调函数
+a.将参数传递给回调函数
+b.在循环内处理回调函数参数
+c.嵌套回调
+
+例子参见 回调参数callback_parameter.js
+
+闭包:变量被绑定到一个函数的作用域,但不绑定到他的父函数的作用域,因为当执行异步回调时,父函数的作用域可能是变的,如遍历.
+例子参见 回调闭包callback_closure.js
