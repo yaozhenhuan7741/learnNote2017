@@ -1,3 +1,4 @@
+一、基础
 1.数据类型
 字符串 String
 数值  Number
@@ -72,6 +73,8 @@ npm pack
 console.log
 console.time console.timeEnd
 
+二、事件、监听器、定时器、回调
+
 事件队列相关
 
 9.定时器
@@ -119,3 +122,8 @@ c.嵌套回调
 
 闭包:变量被绑定到一个函数的作用域,但不绑定到他的父函数的作用域,因为当执行异步回调时,父函数的作用域可能是变的,如遍历.
 例子参见 回调闭包callback_closure.js
+
+链式回调--调用顺序
+例子参见 回调链式callback_chain.js
+
+三、数据处理
