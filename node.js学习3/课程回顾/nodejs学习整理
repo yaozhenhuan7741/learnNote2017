@@ -154,3 +154,13 @@ c.嵌套回调
 
 15.stream流
 
+Readable（可读）、Writeable（可写）、Duplex（双工）、Transform（交换）流
+适用于Readable流的常用事件：readable、data、end、close、error
+适用于Readable流的常用方法：read、setEncoding(encoding)、pause、resume、pipe、unpipe、
+
+继承流对象，使用util.inherits和原型来继承。
+例子参见 可读流stream_read.js
+
+适用于Writeable流的常用事件：drain、finish、pipe、unpipe
+适用于Writeable流的常用方法：write、end
+例子参见 可写流stream_write.js
