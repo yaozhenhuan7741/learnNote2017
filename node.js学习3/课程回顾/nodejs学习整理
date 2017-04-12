@@ -164,3 +164,9 @@ Readable（可读）、Writeable（可写）、Duplex（双工）、Transform（
 适用于Writeable流的常用事件：drain、finish、pipe、unpipe
 适用于Writeable流的常用方法：write、end
 例子参见 可写流stream_write.js
+
+ 双向流 Duplex
+ 例子参见 双向流stream_duplex.js
+
+ 交换流 Transform
+ 例子参见 交换流stream_transform.js
