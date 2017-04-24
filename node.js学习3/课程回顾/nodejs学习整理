@@ -170,3 +170,17 @@ Readable（可读）、Writeable（可写）、Duplex（双工）、Transform（
 
  交换流 Transform
  例子参见 交换流stream_transform.js
+
+ 管道 pipe
+ 例子参见 管道stream_piped.js
+
+ 压缩与解压缩 zlib
+ gzip/gunzip
+ deflate/inflate
+ deflateRaw/inflateRaw
+
+ 缓冲区压缩与解压
+ 例子参见 缓冲区压缩解压zlib_buffer.js
+
+ 流的压缩与解压缩: 通过管道函数,通过压缩/解压缩对象把数据从一个流输送到另一个流
+ 例子参见 流压缩解压缩zlib_file.js
