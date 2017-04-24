@@ -184,3 +184,31 @@ Readable（可读）、Writeable（可写）、Duplex（双工）、Transform（
 
  流的压缩与解压缩: 通过管道函数,通过压缩/解压缩对象把数据从一个流输送到另一个流
  例子参见 流压缩解压缩zlib_file.js
+
+四、文件系统
+16.文件系统
+  同步文件系统调用  异步文件系统调用
+  文件打开/关闭
+  fs.open(path,flags,[mode],callback)
+  fs.openSync(path,flags,[mode])
+  path:文件路径
+  flags:打开文件的模式,如 r,r+,rs,rs+,w,wx,w+,wx+,a,ax,a+,ax+  有+号,就有读写权限,有x,则文件不能存在
+  mode:文件访问模式,默认0666
+
+  fs.close(fd,callback)
+  fs.closeSync(fd)
+  例如:
+  fs.open('myfile','w',function(err,fd){
+    if(!err){
+        fs.close(fd);
+        }
+    });
+
+17.简单文件写入
+fs.writeFile(path,data,[option],callback)
+fs.writeFileSync(path,data,[option])
+例子参见: 简单文件写入file_write.js
+
+18.同步文件写入
+先用fs.openSync打开文件,然后用writeSync写入,最后用closeSync关闭
+例子参见: 同步文件写入file_write_sync.js
