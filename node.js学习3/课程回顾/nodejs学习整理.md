@@ -1,18 +1,21 @@
-一、基础
-1.数据类型
+##将nodejs学习整理重新编辑成markdown格式
+##一、基础
+1. 数据类型
+```
 字符串 String
 数值  Number
 布尔  Boolean
 数组  Array
 对象  Object
 空    Null
-
-2.运算符
+```
+2. 运算符
 算数运算符 + - ++ -- * / %
 赋值运算符 = += -+ *= /= %=
 比较运算符 ==  === != !== > >= < <=
 逻辑运算符 && || !
 条件运算符
+```
 if(){}else{}  if(){}else if(){}else{}
 switch(表达式){
     case a:
@@ -24,20 +27,27 @@ switch(表达式){
     default:
     代码
 }
-3.循环
+```
+3. 循环
+```
 while(){}
 do{}while();
 for(var i=0;i<len;i++){} //赋值;条件;更新
 for/in循环 var days=[1,2,3,4,5,6,d,f]   for( var idx in days){}
 中断  break  continue
-4.函数、匿名函数
+```
+4. 函数、匿名函数
+```
 function 名称(参数){表达式}  使用return返回值
-5.对象
+```
+5. 对象
+```
 var x=new Number('5');
 var y={'name':'malei'}  访问对象 y.name  或者 y['name']
-
+```
 对于一次性的对象，以后不再使用的一般使用 {}直接定义对象：简单对象
 对于需要重复使用的，将其封装为函数块
+```
 function User(first,last){
 this.first=first;
 this.last=last;
@@ -48,17 +58,19 @@ var user=new User('ma','lei');
 User.prototype={
     getName:function(){return this.first+' '+this.last}
 }
-
+```
 字符串对象常用方法
+```
 charAt charCodeAt concat indexOf lastIndexOf
 match(regex) replace search slice split substr substring valueOf
-
+```
 数组对象常用方法
+```
 concat indexOf join lastIndexOf pop push shift unshift reverse
 slice sort  splice toString valueOf
-
-6.异常 try catch throw finally
-
+```
+6. 异常 try catch throw finally
+```
 try{}catch(err){console.log(err.name+err.message)};
 try{
     if(xxx) throw{message:xxxxxxx};
@@ -67,17 +79,24 @@ try{
 }catch(err){
     err.message
 }finally{}
-7.模块封装
+```
+7. 模块封装
+```
 npm pack
-8.控制台console
+```
+8. 控制台console
+```
 console.log
 console.time console.timeEnd
+```
 
-二、事件、监听器、定时器、回调
 
-事件队列相关
+##二、事件、监听器、定时器、回调
 
-9.定时器
+* `事件队列相关`
+
+9. 定时器
+```
 a. 超时 setTimeout(回调函数，时间，[回调函数需要的参数])
 b. 间隔 setInterval(回调函数，时间，[回调函数需要的参数])
 c. 及时 setImmediate(回调函数，参数)   回调函数被放置在事件队列中，并在遍历事件队列循环的每次迭代中，在I/O事件之后执行
@@ -87,15 +106,20 @@ c. 及时 setImmediate(回调函数，参数)   回调函数被放置在事件�
 d. nextTick() 在事件循环的下一个循环中运行，在I/O事件被触发之前
 
 例子参见 事件队列nexttick.js
+```
+* `监听器和发射器`
 
-监听器和发射器
-10.发射器
+10. 发射器
+
 将自定义事件添加到JavaScript对象
 方法一: 传统方式
+```
 var events=require('events');
 var emitter=new events.EventEmitter();
 emitter.emit('simpleEvent');
+```
 方法二: 继承的方式
+```
 function MyObj(){
 Events.eventEmitter.call(this);
 }
@@ -103,34 +127,40 @@ MyObj.prototype.__proto__=events.EventEmitter.prototype;
 使用
 var  myobj=new MyObj();
 myobj.emit('someevent');
-11.监听器
+```
+11. 监听器
+```
 .addListener(eventName,callback); //将回调函数添加到监听器中
 .on(eventName,callback)  //同addListener
 .once(eventName,callback) //事件第一次被触发时执行
 .listeners(eventName) //返回所有添加到事件eventName上的函数数组
 .setMaxListeners(n)   //n默认为10,如果多于n的监听器都加入到EventEmitter对象,就触发报警
 .removeListener(eventName,callback); //将callback函数从eventName事件中删除
-
+```
 例子参见 监听器发射器试验emitter_listener.js
 
-12.回调函数
+12. 回调函数
+```
 a.将参数传递给回调函数
 b.在循环内处理回调函数参数
 c.嵌套回调
-
+```
 例子参见 回调参数callback_parameter.js
 
-闭包:变量被绑定到一个函数的作用域,但不绑定到他的父函数的作用域,因为当执行异步回调时,父函数的作用域可能是变的,如遍历.
+_闭包_:变量被绑定到一个函数的作用域,但不绑定到他的父函数的作用域,因为当执行异步回调时,父函数的作用域可能是变的,如遍历.
 例子参见 回调闭包callback_closure.js
 
 链式回调--调用顺序
 例子参见 回调链式callback_chain.js
 
-三、数据处理
-13.JSON
+##三、数据处理
+13. JSON
+    ```
     JSON字符串转对象JSON.parse(string)
     JSON对象转字符串JSON.stringify(obj)
-14.buffer缓冲
+    ```
+14. buffer缓冲
+```
 创建缓冲区  new Buffer(sizeInBytes)    new Buffer(octerArray)  new Buffer(string,[encoding])
 写入缓冲区  write fill writeInt8 writeInt16LE writeInt16BE 参见例子
 例子参见  缓冲写入buffer_write.js
@@ -151,44 +181,47 @@ c.嵌套回调
 缓冲区拼接 concat
 
 例子参见  缓冲拼接buffer_concat.js
-
-15.stream流
-
+```
+15. stream流
+```
 Readable（可读）、Writeable（可写）、Duplex（双工）、Transform（交换）流
-适用于Readable流的常用事件：readable、data、end、close、error
+```
+* 适用于Readable流的常用事件：readable、data、end、close、error
 适用于Readable流的常用方法：read、setEncoding(encoding)、pause、resume、pipe、unpipe、
-
 继承流对象，使用util.inherits和原型来继承。
-例子参见 可读流stream_read.js
+    * 例子参见 可读流stream_read.js
 
-适用于Writeable流的常用事件：drain、finish、pipe、unpipe
+* 适用于Writeable流的常用事件：drain、finish、pipe、unpipe
 适用于Writeable流的常用方法：write、end
-例子参见 可写流stream_write.js
+    * 例子参见 可写流stream_write.js
 
- 双向流 Duplex
- 例子参见 双向流stream_duplex.js
+* 双向流 Duplex
+    * 例子参见 双向流stream_duplex.js
 
- 交换流 Transform
- 例子参见 交换流stream_transform.js
+* 交换流 Transform
+    * 例子参见 交换流stream_transform.js
 
- 管道 pipe
- 例子参见 管道stream_piped.js
+* 管道 pipe
+    * 例子参见 管道stream_piped.js
 
- 压缩与解压缩 zlib
+*  压缩与解压缩 zlib
+ ```
  gzip/gunzip
  deflate/inflate
  deflateRaw/inflateRaw
+```
+* 缓冲区压缩与解压
+    * 例子参见 缓冲区压缩解压zlib_buffer.js
 
- 缓冲区压缩与解压
- 例子参见 缓冲区压缩解压zlib_buffer.js
+* 流的压缩与解压缩: 通过管道函数,通过压缩/解压缩对象把数据从一个流输送到另一个流
+    * 例子参见 流压缩解压缩zlib_file.js
 
- 流的压缩与解压缩: 通过管道函数,通过压缩/解压缩对象把数据从一个流输送到另一个流
- 例子参见 流压缩解压缩zlib_file.js
-
-四、文件系统
-16.文件系统
+##四、文件系统
+16. 文件系统
+  
   同步文件系统调用  异步文件系统调用
   文件打开/关闭
+  ```
   fs.open(path,flags,[mode],callback)
   fs.openSync(path,flags,[mode])
   path:文件路径
@@ -203,18 +236,58 @@ Readable（可读）、Writeable（可写）、Duplex（双工）、Transform（
         fs.close(fd);
         }
     });
-
-17.简单文件写入
+```
+17. 文件写入 
+* 简单文件写入
+```
 fs.writeFile(path,data,[option],callback)
 fs.writeFileSync(path,data,[option])
-例子参见: 简单文件写入file_write.js
+```
+    * 例子参见: 简单文件写入file_write.js
 
-18.同步文件写入
+* 同步文件写入
+
 先用fs.openSync打开文件,然后用writeSync写入,最后用closeSync关闭
-例子参见: 同步文件写入file_write_sync.js
+    
+    * 例子参见: 同步文件写入file_write_sync.js
 
-19.异步文件写入
+* 异步文件写入
+
 fs.write(fd,data,offset,length,position,callback) 其中callback必须有两个参数,error和bytes
-例子参见: 异步文件写入file_write_async.js
+    
+    * 例子参见: 异步文件写入file_write_async.js
 
-****后续学习整理,转用markdown格式的文件书写****
+* 流式文件写入
+
+先创建一个Writeable对象,然后使用标准的流式write(buffer)方法写入,
+完成后,调用end()方法关闭流
+    
+    * 例子参见: 流式写入file_write_stream.js
+
+18. 文件读取
+
+* 简单文件读取
+```
+fs.readFile(path,[options],callback)
+fs.readFileSync(path,[options])
+```
+
+    * 例子参见: 简单文件读取file_read.js
+    
+* 同步文件读取
+```
+fs.readSync(fd,buffer,offset,length,position)    
+```
+    * 例子参见: 同步文件读取file_read_sync.js
+    
+* 异步文件读取
+```
+fs.read(fd,buffer,offset,length,position,callback)
+```
+    * 例子参见: 异步文件读取file_read_async.js
+    
+* 流式文件读取
+```
+先创建一个readable流,然后通过管道,输出到writeable流
+```
+    * 例子参见: 流式读取file_read_stream.js
