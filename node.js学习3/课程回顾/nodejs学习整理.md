@@ -291,3 +291,82 @@ fs.read(fd,buffer,offset,length,position,callback)
 先创建一个readable流,然后通过管道,输出到writeable流
 ```
     * 例子参见: 流式读取file_read_stream.js
+    
+19. 其他文件系统任务
+
+* 验证存在性
+```
+fs.exists(path,callback)
+fs.existsSync(path)
+```
+* 文件信息
+```
+fs.stat(path,callback);//callback两个参数,err和stats对象
+fs.statSync(path);//返回stats对象
+
+stats对象的常用属性和方法
+isFile()
+isDirectory()
+isSocket()
+dev
+mode
+size
+blksize
+atime
+mtime
+ctime
+```
+    * 例子参见: 文件信息file_stats.js
+  
+* 列出文件
+
+```
+fs.readdir(path,callback);//callback参数err,文件名数组
+fs.readdirSync(path);//文件名数组
+```
+    * 例子参见: 遍历目录file_readdir.js
+    
+* 删除文件
+
+```
+fs.unlink(path,callback);//参数为err
+fs.unlinkSync(path);
+```
+
+* 截断文件
+
+```
+fs.truncate(path,len,callback);//回调函数参数为err
+fs.truncateSync(path,len);//
+返回值为true/false
+```
+
+* 建立和删除目录
+
+```
+fs.mkdir(path,[mode],callback);//回调函数参数为err
+fs.mkdirSync(path);
+
+fs.rmdir(path,callback);
+fs.rmdirSync(path);
+```
+
+* 重命名文件和目录
+
+```
+fs.rename(oldPath,newPath,callback);//同上
+fs.renameSync(oldPath,newPath);
+```
+
+* 监视文件变化
+
+```
+fs.watchFile(path,[options],callback);
+options,可选,对象格式,包含persistent(持续)和interval(间隔)属性
+callback参数为当前stats对象和之前stats对象
+
+fs.watchFile('log.txt',{persistent:true,interval:5000},function(curr,prev){
+console.log('log.txt modified at: "+curr.mtime);
+console.log('previous modification was: "+prev.mtime);
+});
+```
