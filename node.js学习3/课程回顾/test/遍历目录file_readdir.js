@@ -10,7 +10,7 @@ function WalkDirs(dirPath) {
         entries.forEach(function (idx) {
             //注:原文为for(var idx in entries),根据webstorm提示修改为forEach
             var fullPath = Path.join(dirPath,idx);
-            //因为异步,在循环中,需要使用闭包
+            //因为异步,在循环中,需要使用闭包,根据网上资料，使用forEach可以不用闭包，已验证
             (function (fullPath) {
                 fs.stat(fullPath, function (err, stats) {
                     if (stats && stats.isFIFO()) {
