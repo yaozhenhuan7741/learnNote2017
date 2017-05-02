@@ -370,3 +370,154 @@ console.log('log.txt modified at: "+curr.mtime);
 console.log('previous modification was: "+prev.mtime);
 });
 ```
+
+## 五、HTTP服务
+
+20. 处理url
+
+* url组成
+```
+http://user:password@host.com:80/resource/path/?query=string#hash
+协议:http
+身份验证:user:password
+主机:host.com    
+    host是主机名
+端口:80
+路径:resource/path/?query=string
+    路径名：resource/path
+    查询/搜索：query=string
+散列:#hash
+```
+* url模块
+
+>将url字符串转换为url对象
+```
+url.parse(urlStr,[parseQueryString],[slashesDenotdHost])
+parseQueryString:布尔值，如果为真，则把查询部分，也解析为对象字面量，默认为false
+slashesDenoteHost:布尔值，如果为真，则把//host/path格式的url解析为{host:'host',pathname:'/path'},否则为{pathname:'//host/path'}。默认为false
+注：经测试slashesDenoteHost无效
+```   
+>将url对象转换为url字符串
+>url.format(urlObj)
+
+* url.parse返回的url对象属性
+
+
+属性|说明
+---|---
+href|完整的、最原始的url
+protocol|协议
+host|URL的主机部分，包括端口信息，小写|
+auth|身份认证部分
+hostname|主机名部分
+port|端口部分
+pathname|路径部分
+search|查询部分，包括问号
+path|完整路径，包括路径和搜索部分
+query|查询部分，如果parseQueryString为假，值为查询部分字符串，如果为真，则值为查询部分解析成的对象
+hash|散列部分，包括#
+
+* url解析
+```
+url.resolve(from,to)
+from是指原始url字符串，to是指想要url被解析到的新位置
+```
+
+   - 例子参见 url对象.js
+   
+* 处理查询字符串和表单参数(queryString模块)
+```
+将查询字符串、或者按照固定格式分割的字符串，解析为对象
+queryString.parse(str,[set],[eq],[options])
+str是查询或参数字符串
+sep是分隔符，默认是&
+eq是赋值运算符,默认是=
+options是一个具有maxKeys属性的最新，可以限制键值对最大数量。0为没限制
+```
+例子
+```
+var qs=require('querystring');
+var queryObj=qs.parse("name=malei&age=29&color=blue");
+console.log(queryObj);
+结果为"{ name: 'malei', age: '29', color: 'blue' }"
+
+```
+把对象转换成查询字符串
+```javascript
+querystring.stringify(obj,[sep],[eq]);
+```
+21. 请求、响应和服务器对象
+
+* http.ClientRequest对象
+```
+http.request(options,callback)
+options是一个对象，定义了如何把客户端的http请求打开并发送到服务器
+callback用于处理服务器返回的响应
+```
+    * 例子参见 http请求.js
+    
+**options可以指定的选项**
+```
+host:域名或主机
+hostname:同host，但比host好
+port:端口，默认80
+localAddress:绑定的本地接口
+socketPath:Unix套接字
+method:请求方法
+path:路径
+headers:标头
+auth：身份验证
+agent:代理
+```    
+  
+* http.ServerResponse对象
+ 
+**ServerResponse对象提供的事件和属性**
+```
+close、headersSent、sendDate、statusCode
+```
+**ServerResponse对象提供的方法**
+```
+writeContinue
+writeHead(statusCode,[reasonPhrase],[headers])
+setHeader(name,value)
+getHeader(name)
+removeHeader(name)
+write(chunk,[encoding])
+end(data,[encoding])
+```
+
+**HTTPServer对象**
+
+```
+request/connect/connection/close/checkContinue/upgrade/clientErroe
+```
+```
+http.createServer([requestListener])
+listen(port,[hostname],[backlog],[callback])
+#port 监听的端口
+#hostname 监听的主机名
+#backlog  积压：排队的最大待处理数，默认511
+#callback 回调，开始监听时，要执行的回调函数
+```
+
+22. http服务器和客户端
+
+* 静态文件服务器
+
+  *  例子参见 静态文件服务器http_server_static.js
+  *  例子参见 web客户端检索静态文件http_client_static.js
+  
+* 动态get服务器
+
+    * 例子参见 动态get服务器http_server_get.js
+    * 例子参见 动态get服务器的web客户端http_client_get.js
+    
+* POST服务器
+
+    * 例子参见 基于post服务器http_server_post.js
+    * 例子参见 post客户端http_client_post.js
+  
+* 与外部源交互
+    
+    * 例子参见 天气预报http_server_external.js

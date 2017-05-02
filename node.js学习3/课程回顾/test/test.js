@@ -25,3 +25,7 @@ aa.forEach(function (idx) {
         console.log(idx)
     });
 })
+
+var qs=require('querystring');
+var queryObj=qs.parse("name=malei&age=29&color=blue");
+console.log(queryObj);
