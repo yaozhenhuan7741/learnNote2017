@@ -26,10 +26,10 @@ function sendResponse(weatherData,res) {
         page+='<h1>天气信息</h1><p>' +
             weatherData +
             '</p>';
-    };
+    }
     page+='</body></html>';
     res.end(page);
-};
+}
 
 function parseWeather(weatherResponse,res) {
 
@@ -44,34 +44,34 @@ function parseWeather(weatherResponse,res) {
         zlib.gunzip(buffer, function(err, decoded) {
             //console.log(err);
             //console.log(decoded.toString())
-            if(decoded.desc=='OK'){
+            var weather=decoded.toString();
+            if(JSON.parse(weather)['desc']==='OK'){
                 console.log('获取天气信息成功')
             }else{
                 console.log('获取天气信息失败')
             }
-            sendResponse(decoded.toString(),res);
+            sendResponse(weather,res);
         });
 
     })
 
-};
-
+}
 function getWeather(city,res) {
-    console.log('获取'+city+'的天气信息')
+    console.log('获取'+city+'的天气信息');
     var options={
         host:'wthrcdn.etouch.cn',
         path:encodeURI('/weather_mini?city='+city),
-        method:'GET',
-    }
+        method:'GET'
+    };
 
     http.request(options,function (weatherResponse) {
         parseWeather(weatherResponse,res);
     }).end();
-};
+}
 
 http.createServer(function (req,res) {
     //console.log(req.method);
-    if(req.method.toLowerCase()=="post"){
+    if(req.method.toLowerCase() === "post"){
         var reqData='';
         req.on('data',function (chunk) {
             reqData+=chunk;
@@ -79,7 +79,7 @@ http.createServer(function (req,res) {
         req.on('end',function () {
             var postParams=qs.parse(reqData);
             //console.log(postParams);
-            getWeather(postParams.city,res);
+            getWeather(postParams['city'],res);
         });
 
     }else{
