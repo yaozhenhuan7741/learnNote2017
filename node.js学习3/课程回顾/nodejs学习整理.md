@@ -558,7 +558,7 @@ listen(port,[hostname],[backlog],[callback])
     ```
 
 24. https客户端
-    ```javascript
+    ```
     var options={
         hostname:'localhost',
         port:443,
@@ -623,3 +623,83 @@ listen(port,[hostname],[backlog],[callback])
 29. 实现tls套接字服务器和客户端
     
     * 略
+    
+## 八、进程相关
+
+30. process模块
+
+    * I/O管道
+    
+    ```
+    #标准输入/标准输出/错误输出
+    #stdin/stdout/stderr
+    
+    process.stdin.on('data',function (data) {
+        console.log('Input data:'+data);
+    });
+    ```
+    
+    * 进程信号
+    ```
+    #注册进行信号,只需使用 on(event,callback)方法
+    process.on('SIGBREAK',function(){
+        console.log('get a sigbreak')
+    })
+    ```
+    可以被发送到nodejs的事件
+    
+    事件|说明
+    ---|---
+    SIGUSR1|当nodejs调试器启动时发出
+    SIGPIPE|当进程试图写一个在另一端没有进程连接的管道时发出
+    SIGHUP|在windows上关闭窗口或者在其他平台上发生类似情况时发出
+    SIGTERM|终止进程请求,非Windows上
+    SIGINT|中断,ctrl+c时
+    SIGBREAK|在windows上,ctrl+break时
+    SIGWINCH|XXX
+    SIGKILL|进程杀掉时,不能安装监听器
+    SIGSTOP|进程停止时,不能安装监听器
+    
+    * 控制进程执行
+    ```
+    如: process.exit(0)
+    常用的控制进程执行的方法
+    about()
+    exit([code])
+    kill(pid,[signal]) #signal默认是SIGTERM
+    nextTick(callback) #事件队列下一个滴答
+    ```  
+    
+    * 进程信息
+    
+    |方法|说明|
+    |:---:|:---|
+    version|指定nodejs版本
+    versions|对象,包含本nodejs应用程序所需的模块和版本
+    config|包含用于编译当前节点可执行程序的配置选项
+    argv|包含用于启动nodejs应用程序的命令参数.所述第一原件是节点(node),并且所述第二元件是路径到主Javascript文件
+    execpath|指定nodejs从中启动的绝对路径
+    execargv|指定用于启动应用程序的特定于节点命令行选项
+    chdir(directory)|更改应用程序的当前工作目录.如果你提供应用程序启动后加载的配置文件,这个功能可能很有用
+    cwd()|返回进程的当前工作目录
+    env|包含在该进程的环境中指定的键/值对
+    pid|指定当前进程的id
+    title|指定当前运行的进程的标题
+    arch|指定进程正在运行的处理器体系结构(例如,x64,ia32或arm)
+    platform|指定操作系统平台(例如,linux,win32或freebsd)
+    memoryusage()|描述nodejs进程的当前内存使用情况.你需要使用until.inspect()方法读取对象.例如:console.log(until.inspect(process.memoryusage()));{rss:13946880,heaptotal:4083456,heapused:2190800}
+    maxtickdepth|指定被nexttick()调度的在阻塞i/o被处理之前运行的事件最大数量.你应该根据需要调整数值,以防你的i/o进程饥饿
+    uptime()|包含nodejs处理器已经运行的秒数
+    hrtime()|在元组数组[seconds,nanoseconds]中返回一个高精度的时间
+    getgid()|在POSIX平台上,返回这个进程的数值型 组id
+    setgid(id)|在POSIX平台上,设置这个进程的数值型 组id
+    getuid()|在POSIX平台上,返回这个进程的数值型或字符串型的 用户id
+    setuid()|在POSIX平台上,设置这个进程的数值型或字符串型的 用户id
+    getgroups()|在POSIX平台上,返回 组id 的数组
+    setgroups(groups)|在POSIX平台上,设置补充组id,需要nodejs有root权限
+    initgroups(user,extra_group)|在POSIX平台上,用来自/etc/group的信息初始化组访问列表,需要root权限
+  
+    
+    
+        
+    
