@@ -36,8 +36,11 @@ function getConnection(connName) {
 
 function writeData(socket,data) {
     //处理write失败时的情况
+    //console.log(socket.write(data));
     var success=!socket.write(data);
+    console.log('success:'+success);
     if(!success){
+        console.log('fffff')
         (function (socket,data) {
             socket.once('drain',function () {
                 writeData(socket,data);
@@ -47,12 +50,18 @@ function writeData(socket,data) {
 }
 
 
-var Malei=getConnection('Malei');
-var Mamingwei=getConnection('Mamingwei');
+// var Malei=getConnection('Malei');
+// var Mamingwei=getConnection('Mamingwei');
 var Masanli=getConnection('Masanli');
 
+var aaaa=fs.readFile('E\:/BaiduYunDownload/ace.rar',function (err,data) {
+    console.log(data.length);
+    //console.log(err);
+    writeData(Masanli,data);
+});
 
-writeData(Malei,'你好！');
-writeData(Mamingwei,'你好吗！');
-writeData(Masanli,'好你妹！');
+// writeData(Malei,'你好！');
+// writeData(Mamingwei,'你好吗！');
+// writeData(Masanli,'好你妹！');
+
 

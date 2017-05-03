@@ -13,7 +13,8 @@ var server=net.createServer(function (client) {
     client.on('data',function (data) {
         console.log('接收到数据，从 %d:%s',client.remotePort,data.toString());
         console.log(' 接收了%sbytes数据',client.bytesRead);
-        writeData(client,'Sending: '+data.toString());
+        //writeData(client,'Sending: '+data.toString());
+        writeData(client,'Sending: '+"123123123");
         console.log(' 发送了%sbytes数据',client.bytesWritten);
     });
     client.on('end',function () {
