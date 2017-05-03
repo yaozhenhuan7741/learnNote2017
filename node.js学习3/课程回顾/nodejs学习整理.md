@@ -521,3 +521,105 @@ listen(port,[hostname],[backlog],[callback])
 * 与外部源交互
     
     * 例子参见 天气预报http_server_external.js
+    >注：教程中的天气接口已经失效，采用其他的免费天气接口，完成的例子,[天气接口示例](http://wthrcdn.etouch.cn/weather_mini?city=%E5%8C%97%E4%BA%AC)
+    
+    
+## 六、HTTPS服务
+
+23. 创建ca
+  - 生成私钥
+    ```
+    openssl genrsa -out server.pem 2048
+    ```
+  - 生成证书签名请求文件
+    ```
+    openssl req -new -key server.pem -out server.csr
+    #windows下有可能报错找不到openssl.cnf 使用下面的语句
+    #openssl req -new -key server.pem -out server.csr -config ".\openssl.cnf"  //指定配置文件位置
+    
+    #回答问题:
+    Country Name (2 letter code) [XX]:CN   #国家代码（中国）
+    State or Province Name (full name) []:BeiJing   #省（北京）
+    Locality Name (eg, city) [Default City]:BeiJing   #市（北京）
+    Organization Name (eg, company) [Default Company Ltd]:Dos2unix   #公司名称
+    Organizational Unit Name (eg, section) []:   #可不填
+    Common Name (eg, your name or your server's hostname) []:   #可不填
+    Email Address []:l_ichen@126.com   #邮箱
+    
+    Please enter the following 'extra' attributes
+    to be sent with your certificate request
+    A challenge password []:   #可不填
+    An optional company name []:   #可不填
+    
+    ```
+  - 生成自签名证书
+    ```
+    openssl x509 -req -days 365  -signkey server.pem  -in server.csr  -out server.crt
+    ```
+
+24. https客户端
+    ```javascript
+    var options={
+        hostname:'localhost',
+        port:443,
+        path:'/',
+        method:'GET',
+        key: fs.readFileSync('../ca/client.pem'),
+        cert:fs.readFileSync('../ca/client.crt'),
+        agent:false
+    };
+    var req=https.request(options,function(res) {
+    xxxx
+    })
+    ```
+    
+25. https服务器
+    ```javascript
+    var options={
+        key:fs.readFileSync('../ca/server.pem'),
+        cert:fs.readFileSync('../ca/server.crt')
+    };
+
+    https.createServer(options,function(req,res) {
+        res.writeHead(200);
+        res.end('hello ');
+    }).listen(3000);
+    ```
+    
+    
+## 七、网络套接字
+
+26. net.Socket对象
+    
+    ```
+    #创建socket对象的几种方法
+    net.connect(options,[connectionListener])
+    net.createConnection(options,[connectionListener])
+    
+    net.connect(port,[host],[connectionListener])
+    net.createConnection(port,[host],[connectionListener])
+    
+    net.connect(path,[connectionListener]);
+    net.createConnection(path,[connectionListener]);
+    
+    ##net.connect和createConnection等效
+    
+    ##属性、事件、方法 略
+    
+    ```
+27. net.Server对象
+    ```
+    #创建服务器对象的方法
+    net.createServer([options],[connectionListener])
+    #其他 略
+
+    ```
+    
+28. 实现tcp套接字服务器和客户端
+    
+    * 例子参见 套接字服务器端socket_server.js
+    * 例子参见 套接字客户端socket_client.js
+    
+29. 实现tls套接字服务器和客户端
+    
+    * 略
