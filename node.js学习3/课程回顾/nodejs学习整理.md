@@ -761,9 +761,22 @@ listen(port,[hostname],[backlog],[callback])
     killSignal|指定终止子进程时使用的kill信号，默认是SIGTERM
     
     
-    * 例子参见 子进程执行child_exec.js
-              # 此例子在windows下执行中文乱码，暂未找到解决方法
+    * 例子参见 子进程执行系统命令child_exec.js
+              # 此例子在windows下执行中文乱码，已找到解决方法
+    * 例子参见 子进程执行命令(解决乱码)clild_exec.js
               
-              
+    * 例子参见           
    
-    
+  - 使用execFile()在另一个进程上执行一个可执行文件
+    ```
+    #语法
+    child_process.execFile(file,args,options,callback)
+    #只能是二进制文件,Linux或windows上的批处理脚本不行
+    #file参数是一个字符串,可执行文件的路径
+    #args参数是一个数组,指定传递给可执行文件的参数
+    #options参数是一个对象,指定执行命令时的设置
+    #callback函数接受error,stdout,stderr三个参数的回调函数
+    ```
+        * 例子参见 子进程执行可执行文件child_exec_file.js
+        # 上述例子执行时中文乱码
+        * 例子参见 子进程执行可执行文件(解决乱码)child_exec_file.js
