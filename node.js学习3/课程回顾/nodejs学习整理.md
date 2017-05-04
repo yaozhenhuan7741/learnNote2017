@@ -700,6 +700,68 @@ listen(port,[hostname],[backlog],[callback])
     initgroups(user,extra_group)|在POSIX平台上,用来自/etc/group的信息初始化组访问列表,需要root权限
   
     
+    * 例子参见 进程信息process_info.js
     
-        
+    
+31. 子进程
+    
+   * ChildProcess对象
+
+   **可以在ChildProcess对象上发出的事件**
+    
+   事件|说明
+    ---|---
+    message|当ChildProcess对象调用send()方法来发送数据时发出。在这个事件上的监听器实现一个回调函数，它随后可以读出发送的数据。例如 `child.on('send',function(message){console.log(message)});`
+    error|在工作进程中出现错误时发出
+    exit|在工作进程结束时发出，两个参数，code和signal,指定推出的代码，并传入信号来杀掉进程(如果它是被父进程杀掉的)
+    close|当工作进程的所有stdio流都已经终止的时候发出，它与exit不同，因为多个进程可以共享相同的stdio流
+    disconnect|当disconnect()在一个工作进程上被调用时发出
+    
+   **可以在ClildProcess对象上调用的方法**
+    
+   方法|说明
+    ---|---
+    kill([signal])|导致操作系统发送一个kill信号给子进程，默认的信号是SIGTERM
+    send(message,[sendHandle])|将消息发送到句柄。该消息可以是字符串或者对象。可以的sendHandle参数让你可以把tcpsever或socket对象发送到客户端。这允许客户端进程共享相同的端口和地址。
+    disconnect()|关闭父进程与子进程之间的进程间通信（或ipc)通道，并把父进程和子进程的连接标志都设置为false
+    
+   示例：`clild.send({cmd:'command data'})`
+    
+   **可以在ChildProcess对象上访问的属性**
+    
+   属性|说明
+    ---|---
+    stdin|输入writable流
+    stdout|标准输出readable流
+    stderr|用于输出错误的标准输出readable流
+    pid|进程的id
+    connected|一个布尔值，在disconnect()被调用后，它被设置为false。当它为false时，你再也不能将消息发送给子进程
+    
+  
+  - 使用exec()在另一个进程上执行一个系统命令
+  
+    ```
+    #语法
+    child_process.exec(command,[options],callback)
+    #command参数是一个字符串，指定了在子shell中执行的命令。
+    #options参数是一个对象，指定了执行命令时使用的设置，比如工作目录
+    #callback参数是一个接受error、stdout、stderr三个参数的函数。
+        #error是执行命令遇到错误时，传递的一个错误对象。stdout和stderr包含执行命令的输出的Buffer对象
+    ```
+    
+    **exec()和execFile()函数可以设置的选项**
+    
+    选项|说明
+    ---|---
+    cwd|指定子进程执行的当前工作目录
+    env|一个对象，指定property:value作为环境的键值对
+    encoding|指定存储命令的输出时输出缓冲区使用的编码
+    maxBuffer|指定stdout和stderr输出缓冲区的大小，默认是200*1024
+    timeout|指定父进程在杀掉子进程之前，如果子进程尚未完成，等待的毫秒数。默认0，无限制
+    killSignal|指定终止子进程时使用的kill信号，默认是SIGTERM
+    
+    
+    * 例子参见 子进程执行child_exec.js
+              # 此例子在windows下执行中文乱码，暂未找到解决方法
+   
     
