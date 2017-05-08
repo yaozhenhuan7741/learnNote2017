@@ -5,7 +5,7 @@
 var http=require('http');
 var options={
     port:8080
-}
+};
 
 function sendRequest() {
     http.request(options,function (res) {
