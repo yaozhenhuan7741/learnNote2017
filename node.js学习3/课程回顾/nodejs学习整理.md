@@ -824,5 +824,59 @@ listen(port,[hostname],[backlog],[callback])
     
     * 例子参见 子进程派生之父进程child_fork.js
     * 例子参见 子进程派生之子模块chef.js
+    
+    
+32. 进程集群  
 
+    * cluster模块
+    
+    **可以由cluster模块发出的事件**
+    
+    事件|说明
+    ---|---
+    fork|当新的工作进程被派生时发出。callback函数接收Worker对象作为唯一参数
+    onlines|当新工作进程发回一条消息，表明它已经启动时发出。callback函数接收一个Worker对象作为唯一参数
+    listening|当工作进程调用listen()开始监听共享端口时发出。callback函数接收Worker对象和工作进程正在监听的端口的address对象作为参数
+    disconnect|当IPC通道被切断时发出。
+    exit|当Worker对象已经断开时发出。callback函数接收Worker、code和使用的signal作为参数
+    setup|在setupMaster()被首次调用时发出
+    
+    **cluster模块的方法和属性**
+    
+    属性|说明
+    ---|---
+    setting|包含exec、args、silent属性值，用于建立集群
+    isMaster|如果当前节点是主节点，则返回true，否则返回false
+    isWorker|如果是工作节点，则返回true
+    setupMaster([setting])|接收一个setting对象。exec是工作进程的JavaScript文件，args是参数数组，silent断开工作线程的IPC机制
+    disconnect([callback])|断开工作进程的IPC机制，并且关闭句柄。当断开连接完成时回调函数被执行
+    worker|引用工作进程的当前Worker对象。这不在主进程中定义
+    workers|包括worker对象
+    
+    **可以由Worker对象发出的事件**
+    
+    事件|说明
+    ---|---
+    message|在工作进程收到一个新消息时发出，回调函数的参数为message
+    disconnect|在IPC通道已对这个工作进程断开后发出
+    exit|在这个Worker对象已断开时发出
+    error|工作进程发送错误时发出
+    
+    **Worker对象的方法和属性**
+    
+    属性|说明
+    ---|---
+    id|工作进程唯一ID
+    process|指定该工作进程运行的clildprocess对象
+    suicide|对这个工作进程调用kill()或disconnect()时被设置为true。你可以使用此标志来确定是否需要跳出尝试的循环
+    send(message,[sendHandle])|将消息发送到主进程
+    kill([signal])|通过端口IPC通道杀掉当前工作进程，然后退出。将suicide标志设置为true
+    disconnect|在工作进程调用它时，关闭所有服务器，等待关闭事件，并端口IPC通道。当从主节点中调用它时，发送一个内部消息给工作进程，使其断开本身。设置suicide
+    
+    
+    例子：实现一个http集群
+    
+    * 例子参见 集群主进程cluster_server.js
+    * 例子参见 集群工作进程cluster_worker.js
+    * 例子参见 集群之客户端cluster_client.js
     
