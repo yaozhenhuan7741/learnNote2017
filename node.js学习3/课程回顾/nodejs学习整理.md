@@ -780,3 +780,49 @@ listen(port,[hostname],[backlog],[callback])
         * 例子参见 子进程执行可执行文件child_exec_file.js
         # 上述例子执行时中文乱码
         * 例子参见 子进程执行可执行文件(解决乱码)child_exec_file.js
+        
+  - 使用spawn()在另一个node.js实例中产生一个进程
+    ```
+    #语法
+    child_process.spawn(command,[args],[options])
+    #command参数是一个字符串，指定被执行的命令
+    #args参数是一个数组，指定传递给可执行命令的命令行参数
+    #options参数是一个对象，指定执行命令时使用的设置
+    
+    ```
+    **可以在spawn()函数中设置的选项**
+    
+    |选项|说明|
+    |---|---|
+    cwd|子进程的工作目录
+    env|一个对象，指定环境变量的键值对
+    detached|布尔值，如果true，则子进程成为新进程组的组长，即使父进程退出，也让这个进程继续；同时需要使用child.unref(),使父进程退出之前不等待子进程
+    uid|对于POSIX进程，指定进程的用户标识
+    gid|对于POSIX进程，指定进程的组标识
+    stdio|定义子进程的stdio配置([stdin,stdout,stderr]),<br>默认情况下，node.js为[stdin,stdout,stderr]打开文件描述符[0,1,2]，此字符串定义每个输入和输出流的配置。例如：<br>['ipc','ipc','ipc']<br>下列选项可用于此：<br>'pipe'--创建子进程和父进程之间的管道<br>'ipc'--父进程和子进程之间创建一个IPC通道，使用send()方法传递消息和文件描述符<br>'ignore'--在子进程中不配置一个文件描述符<br>Stream--指定使用在父进程中定义的readable和writeable流对象<br>文件描述符整数<br>null,undefined--使用默认值
+        
+    * 例子参见 子进程在另一个进程中产生命令child_process_spawn_file.js    
+    * 例子参见 子进程在另一个进程中产生命令(解决乱码)child_process_spawn_file.js 
+       
+  - 实现子派生(fork)
+    ```
+    #语法
+    child_process.fork(modulePath,[args],[options])
+    #modulePaht参数是一个字符串，指定被新的node.js实例启动的JavaScript文件的路径
+    #args参数是一个数组
+    #options参数是一个对象
+    ```   
+    **fork()函数可以设置的选项
+    
+    选项|说明
+    ---|---
+    cwd|工作目录
+    env|环境
+    encoding|编码
+    execPath|指定执行脚本的可执行文件（如node.exe）
+    slient|布尔值，默认false，如果true，派生的进程中的stdout和stderr不与父进程相关联
+    
+    * 例子参见 子进程派生之父进程child_fork.js
+    * 例子参见 子进程派生之子模块chef.js
+
+    
