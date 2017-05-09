@@ -880,3 +880,103 @@ listen(port,[hostname],[backlog],[callback])
     * 例子参见 集群工作进程cluster_worker.js
     * 例子参见 集群之客户端cluster_client.js
     
+## 九、其他nodejs模块
+    
+33. os模块
+
+    **可以在os模块中被调用的方法**
+    
+    方法|说明
+    ---|---
+    tmpdir()|返回默认的临时目录字符串
+    endianness()|返回当前是大端还是小端，BE或LE
+    hostname()|返回主机名
+    type()|返回字符串形式的操作系统类型
+    platform()|返回字符串形式的平台名称（win32/linux/freeBSD)
+    arch()|返回平台的体系结构（x86/x64)
+    release()|返回操作系统的发布版本
+    uptime()|返回一个以秒为单位的时间戳，表示已经运行的时间
+    loadavg()|在unix系统中，返回一个包含[1,5,15]分钟的负载值
+    totalmem()|返回一个字节单位的整数，表示内存容量
+    freemem()|返回一个以字节为单位的整数，表示可用内存
+    cpus()|返回描述了model(型号)、speed（速度）和times(时间）的对象的数组，包含CPU已经花费在user/nice/sys/dle/irq上的时间量
+    networkInterfaces()|返回一个对象数组，描述绑定到系统中的每个网络接口上的address和family(地址族）
+    EOL|包含操作系统相应的行尾字符
+    
+    * 例子参见 操作系统信息os_info.js
+    
+34. util模块
+    
+    **格式化字符串**
+    ```
+    #语法
+    util.format(format,[...])
+    #format参数是可以包含零个或多个占位符的字符串，占位符如下：
+    %s  字符串
+    %d  数值
+    %j  可以转换为字符串的对象
+    %   如果%后为空，则不作为占位符
+    
+    ```
+    
+    **检查对象类型**
+    ```
+    #语法一
+    util.isArray()
+    util.isRegExp()
+    util.isDate()
+    util.isError()
+    #语法二
+    (xxx instanceof Array) //使用instanceof，返回布尔值
+    ```
+    **通步写入输出流**
+    ```
+    #常用
+    util.debug(string) //写入stderr
+    util.error([...])  //写入stderr
+    util.puts([...])   //写入stderr
+    util.print([...])  //写入stdout
+    util.log(string)   //把string和一个时间戳写入stdout
+    ```
+    **将JavaScript对象转换为字符串**
+    ```
+    #语法
+    util.inspect(object,[options]);
+    #options参数可以让你控制格式化过程的某些方面，可以包含如下属性
+    showHidden:默认false,当true，该对象的不可枚举的属性也别转换成字符串
+    depth:限制检查过程遍历的深度，可以防止无限循环，默认2
+    colors:默认false，当true，输出使用ansi颜色代码的样式
+    customInspect:默认true，当false，被检查对象定义的任何自定义inspect()函数都不会被调用
+    
+    #注意，与JSON.stringify()各有千秋
+
+    ```
+    **继承**
+    ```
+    #语法
+    util.inherits(constructor,superConstructor)
+    ```
+    * 例子参见 util继承util_inherit.js
+    
+35. dns模块
+    
+    **可以在dns模块上调用的方法**
+    
+    方法|说明
+    ---|---
+    lookup(domain,[family],callback)|解析域名，family可以使4、6，默认null都解析，callback接收两个参数，err和ip地址数组
+    resolve(domain,[rrtype],callback)|把域名解析成类型由rrtype指定的记录数组。rrtype可以是<br>A:ipv4(默认)<br>AAAA:ipv6<br>MX:邮件交换记录<br>TXT:文字记录<br>SRV:SRV记录<br>PTR:反向IP查找<br>NS：名称服务器记录<br>CNAME:规范名称记录<br>callback同上
+    resolve4(domain,callback)|同上，但只ipv4
+    resolve6(domain,callback)|同上，但只ipv6
+    resolveMx()|同上
+    resolveTxt()|同上
+    resolveSrv()|同上
+    resolveNs()|同上
+    resolveCname()|同上
+    reverse(ip,callback)|对IP反向查找，callback第一个参数是err，第二个是域名数组
+    
+    * 例子参见 dns模块dns_lookup.js
+    
+## 十、mongodb
+
+36. mongodb基础知识
