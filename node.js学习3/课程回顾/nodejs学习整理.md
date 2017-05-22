@@ -1048,4 +1048,47 @@ listen(port,[hostname],[backlog],[callback])
        
 37. mongodb安装
        
-       
+      **安装**
+      
+      下载压缩包，解压，然后将mongodb/bin目录添加到path环境变量即可
+      
+      **启动**
+      
+      *需要提前创建好<mongo_data_location>/data/db目录，要不然会启动失败
+      
+      ```
+      mongod -dbpath <mongo_data_location>/data/db
+      #如果没有dbpath参数，会在当前分区的根目录下去找/data/db目录
+      ```
+      
+      **mongod的命令行参数**
+      
+      参数|说明
+      ---|---
+      -h或--help|帮助
+      --version|版本
+      --config<文件名>或-f <文件名>|指定包含运行时配置的配置文件
+      --verbose或-v|增加发送到控制的，并写入--logpath日志文件的内容
+      --quiet|减少发送到控制台和日志文件的内容
+      --port<端口>|指定mongod监听的tcp端口，默认27017
+      --bind_ip<ip地址>|指定mongod绑定的ip，默认是所有
+      --maxConns<编号>|指定最大并发连接数，最大是20000
+      --logpath<路径>|指定日志路径，重启数据库时会被覆盖，除非还指定--logappend
+      --auth|对远程主机连接启用身份验证
+      --dbpath<路径>|指定mongod实例用来存储数据的目录
+      --nohttpinterface|禁用http接口
+      --nojournal|禁用日志
+      --norealloc|禁止预分配数据文件，从而缩短启动时间，但会影响性能
+      --repair|在所有数据库上运行修复程序
+      
+      **停止数据库**
+      
+      ```
+        #最好的方法是从shell客户端
+        use admin
+        db.shutdownServer()
+      ```
+      
+38. 从shell访问mongodb
+
+待续
