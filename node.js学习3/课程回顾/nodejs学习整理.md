@@ -1091,5 +1091,4 @@ listen(port,[hostname],[backlog],[callback])
       
 38. 从shell访问mongodb
 
-待续
 执行mongo.exe
