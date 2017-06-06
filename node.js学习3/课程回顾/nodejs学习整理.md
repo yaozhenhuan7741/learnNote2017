@@ -1089,6 +1089,80 @@ listen(port,[hostname],[backlog],[callback])
         db.shutdownServer()
       ```
       
+      **安装包文件说明**
+      
+      名称|说明
+      :---|:---
+      bsondump.exe|用于将导出的BSON文件格式转换为JSON格式
+      mongo.exe|mongoDB的客户端
+      mongod.exe|用于启动mongoDB的Server
+      mongod.pdb|
+      mongodump.exe|用于从mongodb数据库中导出BSON格式的文件，类似于MySQL的dump工具mysqldump
+      mongoexport.exe|用于将mongodb中的数据库，导出为JSON,CSV或TSV的格式。
+      mongofiles.exe|用于和mongoDB的GridFS文件系统交互的命令，并可操作其中的文件，它提供了我们本地系统与GridFS文件系统之间的存储对象接口。
+      mongoimport.exe|用于将JSON,CSV或TSV等文件格式，导入到mongoDB数据库中。
+      mongooplog.exe|于从运行的mongod服务中拷贝运行日志到指定的服务器，主要用于增量备份。
+      mongoperf.exe|用于独立检查mongoDB的I/O性能的工具。
+      mongorestore.exe|用于恢复导出的BSON文件到mongodb数据库中。
+      mongos.exe|用于注册系统处理
+      mongos.pdb|
+      mongostat.exe|当前mongod状态监控工具，像linux中监控linux的vmstat
+      mongotop.exe|提供了一个跟踪mongod数据库花费在读写数据的时间，为每个collection都会记录，默认记录时间是按秒记录。
+      dbname.0 |数据文件
+      dbname.ns文件|存储命名空间信息。
+      
 38. 从shell访问mongodb
 
 执行mongo.exe
+
+常用命令
+
+``` 
+#查看数据库
+show dbs
+#切换数据库
+use dbname
+#查看表/文档
+show tables/collections
+#查看帮助
+help
+       db.help()                    help on db methods
+       db.mycoll.help()             help on collection methods
+       sh.help()                    sharding helpers
+       rs.help()                    replica set helpers
+       help admin                   administrative help
+       help connect                 connecting to a db help
+       help keys                    key shortcuts
+       help misc                    misc things to know
+       help mr                      mapreduce
+
+       show dbs                     show database names
+       show collections             show collections in current database
+       show users                   show users in current database
+       show profile                 show most recent system.profile entries with time >= 1ms
+       show logs                    show the accessible logger names
+       show log [name]              prints out the last segment of log in memory, 'global' is default
+       use <db_name>                set current database
+       db.foo.find()                list objects in collection foo
+       db.foo.find( { a : 1 } )     list objects in foo where a == 1
+       it                           result of the last line evaluated; use to further iterate
+       DBQuery.shellBatchSize = x   set default number of items to display on shell
+       exit                         quit the mongo shell
+ 
+#建库--隐式创建
+use newdbname
+
+#建表--显式创建--没有任何意义,因为是文档类型,并不是固定格式的
+db.createCollection('tablename');
+#建表--隐式创建
+db.tablename.insert({xxxxx}); #直接插入文档即可
+
+#删除表
+db.tablename.drop()
+
+#删除库
+先use dbname,然后 db.dropDatabase();--删除当前库
+
+
+
+```
