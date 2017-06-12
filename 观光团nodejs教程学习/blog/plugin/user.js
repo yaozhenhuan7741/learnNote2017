@@ -12,19 +12,28 @@ module.exports.login={
         var postData = {
             username: req.body.username
         };
+        var resJson={
+            status:false,
+            msg:''
+        };
         ModelUser.findOne(postData, function (err, data) {
             if (err) console.log(err);
             console.log(data);
             if (data) {
                 if (data.password == req.body.password) {
                     req.session.user = data;
-                    res.redirect('/user/' + data._id);
+                    resJson.msg='登录成功';
+                    resJson.status=true;
+                    res.send(resJson);
+                    //res.redirect('/user/' + data._id);
                     //res.send('登录成功');
                 } else {
-                    res.send('非法密码');
+                    resJson.msg='非法密码'
+                    res.send(resJson);
                 }
             } else {
-                res.send('无此用户');
+                resJson.msg='无此用户';
+                res.send(resJson);
                 //console.log('aaa')
             }
         });
@@ -47,15 +56,27 @@ module.exports.reg={
         };
         //console.log(postData);
 
+        var resJson={
+            status:false,
+            msg:''
+        };
         ModelUser.findOne({username: postData.username}, function (err, data) {
             if (err) console.log(err);
             if (data) {
-                res.send('该用户名已被注册');
+                //res.send('该用户名已被注册');
+                resJson.msg='该用户名已被注册';
+                res.send(resJson);
             } else {
                 ModelUser.create(postData, function (err, data) {
-                    if (err) console.log(err);
+                    if (err){
+                        resJson.msg='注册异常';
+                        //console.log(err);
+                        res.send(resJson);
+                    }
+                    resJson.msg='注册成功';
+                    resJson.status=true;
                     req.session.user = data;
-                    res.send(data);
+                    res.send(resJson);
                 });
             }
         });

@@ -1,9 +1,54 @@
 <% include common/header.html %>
+
 <form method="post">
-    <h2>用户名</h2><br>
-    <input type="text" name="username" value=""><br>
-    <h2>密码</h2><br>
-    <input type="password" name="password" value=""><br>
-    <input type="submit" value="注册"><br>
+    <div class="form-group">
+        <label for="exampleInputEmail1">用户名</label>
+        <input type="text" class="form-control" id="username" name="username" placeholder="用户名">
+    </div>
+    <div class="form-group">
+        <label for="exampleInputPassword1">密码</label>
+        <input type="password" class="form-control" id="password" name="password" placeholder="密码">
+    </div>
+
+    <button type="submit" onclick="postData();return false" class="btn btn-default">注册</button>
 </form>
+
+
+<div class="modal fade" tabindex="-1" id="msg-box" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">提示信息</h4>
+            </div>
+            <div class="modal-body">
+                <p>One fine body&hellip;</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default"  onclick="" data-dismiss="modal">确定</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<script>
+    function postData() {
+
+        $.post('/reg', {
+            username: $('#username').val(),
+            password: $('#password').val()
+        }, function (data) {
+            console.log(data);
+            $('.modal-body').html(data.msg);
+
+            if(data.status){
+                window.location.href='/';
+            }else {
+                $('#msg-box').modal('show');
+            }
+        });
+    };
+
+</script>
 <% include common/footer.html %>

@@ -116,5 +116,16 @@ ModelBlog.find({},null,{sort:{'_id':-1}}).populate('author').exec(function (err,
     用户登录后，才能访问的页面；
     用户登录后，不能访问的页面；
     
+13. 使用bootstrap美化界面，将post请求改为ajax
+    
+    导航栏美化
+    注册界面美化
+    注册post改为ajax
+    
+    $.post(url,postdata,callback)
+    
+    使用模态窗口
+    
+    
     
     
