@@ -126,6 +126,11 @@ ModelBlog.find({},null,{sort:{'_id':-1}}).populate('author').exec(function (err,
     
     使用模态窗口
     
-    
+14. 美化续
+    美化微博展示页面
+    美化微博列表页面
+
+15. 增加微博修改路由和界面
+    在微博列表界面增加按钮,修改微博
     
     
