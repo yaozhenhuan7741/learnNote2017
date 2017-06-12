@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 
 //增加Mongo相关和session相关
 var mongoose=require('mongoose');
+mongoose.Promise=global.Promise;
 var session=require('express-session');
 var MongoStore=require('connect-mongo')(session);
 

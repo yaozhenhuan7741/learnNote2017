@@ -4,6 +4,10 @@
 var mongoose=require('mongoose');
 var Schema=mongoose.Schema;
 var blogSchema=new Schema({
+    author:{
+        type:Schema.Types.ObjectId,
+        ref:'user'
+    },
     title:String,  //微博标题
     content:String  //微博内容
 });

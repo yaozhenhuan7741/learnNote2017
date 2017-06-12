@@ -84,3 +84,37 @@ url中  /user/:_id 匹配
 
 增加微博列表页面和路由
 微博列表排序
+
+10. 关联文档
+
+微博模型中添加作者字段，关联user表
+```
+var blogSchema=new Schema({
+    author:{
+        type:Schema.Types.ObjectId,
+        ref:'user'
+    },
+    title:String,  //微博标题
+    content:String  //微博内容
+});
+
+```
+```
+ModelBlog.find({},null,{sort:{'_id':-1}}).populate('author').exec(function (err,data) {
+            if(err) console.log(err);
+                        // res.send(data);
+            res.render('list',{title:'微博列表',blogs:data});
+        })
+```
+    
+11. 业务模块分离
+    
+    将route.js中的处理函数，提取到单独的文件中，使业务和处理逻辑分离（mvc思想）
+    
+12. 用户访问权限
+    （防止直接访问url）;
+    用户登录后，才能访问的页面；
+    用户登录后，不能访问的页面；
+    
+    
+    
