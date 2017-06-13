@@ -1,0 +1,22 @@
+<% include common/header.ejs%>
+<form>
+    <input type="text" disabled id="username" value="<%=user.username%>"><br>
+    <input type="text"  id="password" value="<%=user.password%>"><br>
+    <button onclick="postData();return false">修改信息</button>
+</form>
+<script>
+    function postData() {
+        $.post('/user/<%=user._id%>/edit',{
+            username:$('#username').val(),
+            password:$('#password').val()
+        },function (data) {
+            console.log(data);
+            if(data.status){
+                window.location.href='/user/<%=user._id%>';
+            }else {
+                alert(data.msg);
+            }
+        })
+    }
+</script>
+<% include common/footer.ejs%>

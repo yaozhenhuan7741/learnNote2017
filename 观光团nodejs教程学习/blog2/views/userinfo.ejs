@@ -1,0 +1,7 @@
+<% include common/header.ejs%>
+<form>
+    <input type="text" disabled value="<%=user.username%>"><br>
+    <input type="text" disabled value="<%=user.password%>"><br>
+    <a href="/user/<%=user._id%>/edit">修改用户</a>
+</form>
+<% include common/footer.ejs%>
