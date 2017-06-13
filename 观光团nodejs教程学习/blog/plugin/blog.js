@@ -13,10 +13,21 @@ module.exports.add={
             title: req.body.title,
             content: req.body.content
         };
-
+        var resJson={
+            status:false,
+            msg:''
+        };
         ModelBlog.create(postData, function (err, data) {
-            if (err) console.log(err);
-            res.redirect('/view/' + data._id);
+            if (err) {
+                console.log(err);
+                resJson.msg='发表失败';
+                res.send(resJson);
+            }
+            resJson.status=true;
+            resJson.msg='发表成功';
+            resJson.data=data;
+            res.send(resJson);
+            //res.redirect('/view/' + data._id);
             //res.send(data);
         });
 
@@ -61,5 +72,34 @@ module.exports.view={
             }
         });
 
+    }
+};
+
+module.exports.edit={
+    get:function (req,res,next) {
+        var _id=req.params._id;
+        ModelBlog.findById(_id,function (err,data) {
+            if(err)console.log(err);
+            //res.send(data);
+            res.render('edit',{title:'修改微博',view:data});
+        });
+        //res.send('修改微博');
+    },
+    post:function (req,res,next) {
+        console.log(req.body);
+        var resJson={
+            status:false,
+            msg:''
+        };
+        ModelBlog.update({_id:req.body._id},{$set:{title:req.body.title,content:req.body.content}},function (err) {
+            if(err){
+                resJson.msg='修改失败';
+                res.send(resJson);
+            }
+            resJson.status=true;
+            resJson.msg='修改成功';
+            res.send(resJson);
+        });
+        //res.send('修改成功');
     }
 }

@@ -1,7 +1,21 @@
 <% include common/header.html %>
-<h1><%=view.title%></h1>
-<div>
-    <%=view.content%>
+<div class="col-md-6">
+<form>
+    <div class="form-group">
+        <label for="exampleInputEmail1">微博标题</label>
+        <input type="text" disabled class="form-control" id="title" >
+    </div>
+    <div class="form-group">
+        <label for="exampleInputPassword1">内容</label>
+        <textarea class="form-control" disabled id="content" rows="3"></textarea>
+    </div>
+</form>
 </div>
+<script>
+    $(function () {
+        $('#title').val("<%=view.title%>");
+        $('#content').val("<%=view.content%>");
+    });
+</script>
 
 <% include common/footer.html %>

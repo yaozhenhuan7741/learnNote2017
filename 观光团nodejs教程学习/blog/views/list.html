@@ -1,5 +1,6 @@
 <% include common/header.html %>
-<table>
+<div class="col-md-10">
+<table class="table table-striped">
     <tr>
         <th>微博ID</th>
         <th>微博作者</th>
@@ -12,11 +13,11 @@
         <td><%=blog._id%></td>
         <td><%=blog.author.username%></td>
         <td><a href="/view/<%=blog._id%>"><%=blog.title%></a></td>
-        <td><%=blog.content%></td>
+        <td><%=blog.content%><a href="/list/<%=blog._id%>/edit"> 修改</a></td>
 
     </tr>
 
     <%});%>
 </table>
-
+</div>
 <% include common/footer.html %>

@@ -41,7 +41,13 @@ module.exports = function (app) {
 
     app.post('/add',PluginBlog.add.post );
 
+    //微博信息
     app.get('/view/:_id',PluginBlog.view.get);
 
+    //微博列表
     app.get('/list',PluginUser.loginYes,PluginBlog.list.get );
+
+    //修改微博
+    app.get('/list/:_id/edit',PluginBlog.edit.get);
+    app.post('/list/:_id/edit',PluginBlog.edit.post);
 };
