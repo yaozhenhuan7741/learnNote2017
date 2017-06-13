@@ -3,16 +3,16 @@
 <form method="post">
     <input type="text" id="username" name="username"><br>
     <input type="text" id="password" name="password"><br>
-    <input type="submit" onclick="postData();return false" value="注册"><br>
+    <input type="submit" onclick="postData();return false" value="登录"><br>
 </form>
 <script>
     function postData() {
-        $.post('/reg',{
+        $.post('/login',{
             username:$('#username').val(),
             password:$('#password').val()
         },function (data) {
             if(data.status){
-                //注册成功
+                //登录成功
                 window.location.href='/';
             }else{
                 alert(data.msg);
