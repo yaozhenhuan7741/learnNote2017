@@ -44,7 +44,12 @@ module.exports.add = {
 module.exports.view = {
     get: function (req, res) {
         var _id = req.params._id;
-        BlobModel.findById(_id, function (err, data) {
+        // BlobModel.findById(_id, function (err, data) {
+        //     if (err) console.log(err);
+        //     res.render('view', {title: '查看微博', blog: data});
+        // });
+
+        BlobModel.findById(_id).populate('author').exec(function (err,data) {
             if (err) console.log(err);
             res.render('view', {title: '查看微博', blog: data});
         });
