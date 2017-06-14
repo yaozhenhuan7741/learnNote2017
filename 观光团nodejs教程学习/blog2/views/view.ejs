@@ -1,0 +1,32 @@
+<% include common/header.ejs%>
+<form>
+    <input type="text" id="title"  disabled value="<%=blog.title%>"><br>
+    <input type="text" id="content" disabled value="<%=blog.content%>"><br>
+    <input type="text" disabled value="<%=blog.time%>"><br>
+
+    <button onclick="changeStatus();return false">修改博客</button>
+    <button onclick="postData();return false">提交修改</button>
+
+</form>
+<script>
+    function changeStatus() {
+        $('#title').attr('disabled',false);
+        $('#content').attr('disabled',false);
+    };
+    function postData() {
+        $.post('/view/<%=blog._id%>/edit',{
+            title:$('#title').val(),
+            content:$('#content').val()
+        },function (data) {
+            if(data.status){
+                window.location.href='/view/<%=blog._id%>';
+            }else{
+                alert(data.msg);
+                console.log(data.err);
+                
+            }
+        })
+    };
+</script>
+
+<% include common/footer.ejs%>

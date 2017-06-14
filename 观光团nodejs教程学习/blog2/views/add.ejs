@@ -1,0 +1,25 @@
+<% include common/header.ejs%>
+
+<form>
+    <input type="text" id="title" name="title"><br>
+    <input type="text" id="content" name="content"><br>
+    <input type="submit" onclick="postData();return false" value="发表博客"><br>
+</form>
+<script>
+    function postData() {
+        $.post('/add',{
+            author:'<%=user._id%>',
+            title:$('#title').val(),
+            content:$('#content').val()
+        },function (data) {
+            if(data.status){
+                window.location.href='/view/'+data.blog._id;
+            }else{
+                alert(data.msg);
+            }
+            
+        })
+    }
+</script>
+
+<% include common/footer.ejs%>
