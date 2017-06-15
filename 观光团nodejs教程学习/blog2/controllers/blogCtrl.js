@@ -5,6 +5,7 @@
 //引入博客模型
 var BlobModel = require('../models/blog');
 
+
 //发表微博
 module.exports.add = {
     get: function (req, res) {
@@ -83,8 +84,13 @@ module.exports.view = {
 //微博列表
 module.exports.list = {
     get: function (req, res) {
-        res.send('微博列表')
-        //res.render('reg', {title: '用户注册'});
+        //res.send('微博列表')
+        BlobModel.find({author:req.session.user._id}).sort({'time':-1}).exec(function (err,data) {
+            console.log(data[0]);
+            
+            res.render('list', {title: '微博列表',blogs:data});
+        });
+        
     },
     post: function (req, res) {
 
