@@ -5,6 +5,7 @@
 //引入博客模型
 var BlobModel = require('../models/blog');
 
+var dateFormat=require('../utils/dateFormat');
 
 //发表微博
 module.exports.add = {
@@ -81,14 +82,21 @@ module.exports.view = {
 
 
 
+
 //微博列表
 module.exports.list = {
     get: function (req, res) {
         //res.send('微博列表')
         BlobModel.find({author:req.session.user._id}).sort({'time':-1}).exec(function (err,data) {
-            console.log(data[0]);
-            
-            res.render('list', {title: '微博列表',blogs:data});
+            //console.log(data[0]);
+
+            res.render('list', {
+                title: '微博列表',
+                blogs:data,
+                myFormat:function (indate) {
+                    return dateFormat(indate,'yyyy-MM-dd hh:mm:ss');
+                }
+            });
         });
         
     },
