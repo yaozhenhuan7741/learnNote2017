@@ -141,3 +141,24 @@ module.exports.useredit={
         //res.send('修改完成');
     }
 }
+
+
+module.exports.LoginChk={
+    mustLogin:function (req,res,next) {
+        var user=req.session.user;
+        if(!user){
+            res.redirect('/login');
+        }else{
+            next();
+        }
+    },
+    mustNoLogin:function (req,res,next) {
+        var user=req.session.user;
+        if(user){
+            res.redirect('/user/'+user._id);
+        }else{
+            next();
+        }
+    }
+
+};
