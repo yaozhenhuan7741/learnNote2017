@@ -979,6 +979,9 @@ listen(port,[hostname],[backlog],[callback])
     
 ## 十、mongodb
 
+
+*教程中mongodb版本较老，很多方法已经不再使用，学习时参考官网*
+
 36. mongodb基础知识
 
        **MongoDb的数据类型和相应的ID号**
@@ -1166,3 +1169,128 @@ db.tablename.drop()
 
 
 ```
+
+39. 权限相关
+
+创建用户，并启用用户验证
+
+用户可以分为用户管理员和数据库管理员，但不强制这么分类
+
+角色|说明
+:---|:---
+read|允许用户从数据库的任何集合中读取数据
+readAnyDatabase|同read，但针对所有数据库
+readWrite|读写
+readWriteAnyDatabase|读写所有数据库
+dbAdmin|允许读写，以及清理/修改/压缩/得到统计概要等
+dbAdminAnyDatabase|同上，但针对所有数据库
+clusterAdmin|允许执行一般的管理，如连接/集群/复制/列出数据库/删除数据库
+userAdmin|允许创建和修改数据库的用户账户
+userAdmin|同上，但针对所有数据库
+
+列出用户的命令
+```
+use xxx  //切换库
+show users //显示用户
+db.system.users.find() //这个也可以
+
+```
+
+用户属性：
+
+字段|格式|说明
+:---|:---|:---
+user|string|用户名
+roles|array|角色名数组
+pwd|hashorstring|密码
+userSource|<database>|可选，可代替pwd，但与pwd互斥
+otherDBRoles|{<database>:[array],<database>:[array]}|可选，对其他数据库的操作权限
+
+配置用户管理员账户
+```
+use admin
+db.createUser({
+    user:'userAdmin',
+    pwd:'123123',
+    roles:['userAdminAnyDatabase']
+})
+
+//注：具有AnyDatabase权限的用户，只能在admin库里创建
+//注：教程中使用的addUser已经不支持
+```
+
+启用身份验证
+
+```
+//启动mongo时，添加--auth参数
+mongod --dbpath "c:/data" --auth
+```
+
+使用用户登录mongo shell
+
+```
+//方法一：
+mongo  //打开shell
+use admin //切换库
+db.auth('username','pwd'); //验证，注意引号
+
+//方法二:
+
+mongo admin -u username -p pwd  //注意，不要有引号
+
+
+
+```
+
+创建数据库管理员账户
+
+```
+use admin
+db.createUser({
+    user:'dbadmin',
+    pwd:'123123',
+    roles:['readWriteAnyDatabase','dbAdminAnyDatabase','clusterAdmin']
+});
+```
+
+创建集合
+
+```
+//既可以显式创建，也可以隐式创建
+
+//隐式创建
+直接调用db.tablename.insert({xxxx})等方法
+
+//显式创建
+db.createCollection('tablename',[options]);
+
+options属性：
+capped,如果为true，则为封顶集合
+size,封顶集合的大小,单位时字节
+max，封顶集合的最大文档数
+autoIndexID，默认为true,自动为添加到集合的每个文档创建一个_id字段，并实现索引。封顶集合应为false
+
+
+```
+
+增删改查(shell中)
+
+注：这里没有进行详细的学习，在nodejs+mongo阶段，在进行深入学习
+
+集合的操作，<br>
+可以使用db.tablename.xxx,<br>
+也可以使用 var coll=db.getCollection('tablename');获取游标，<br>
+然后通过游标操作  coll.find()
+
+查询
+db.tablename.find({xx:xx})
+
+插入
+db.tablename.insert({xx:xx})
+或者 db.tablename.save({xxx:xx})
+
+删除
+db.tablename.remove({})
+
+更新
+db.tablename.update({xxxx:xxx,xxx:xxx})
