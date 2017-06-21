@@ -1294,3 +1294,121 @@ db.tablename.remove({})
 
 更新
 db.tablename.update({xxxx:xxx,xxx:xxx})
+
+40. node.js+mongodb原生驱动
+
+* 安装mongodb驱动模块
+
+    npm install mongodb
+    
+* 使用MongoClient.open方法连接数据库(mongodb1.4之前版本支持此方法,现在的版本不支持,这里的实验重在练习)    
+    
+    注:教程中使用的mongodb模块较老(1.4),当前版本为2.2,很多api已经不支持,比如mongoClient.open
+    注:下面的试验,使用 npm install mongodb@1.4,然后进行试验
+    
+* 写入关注
+    
+    级别|说明
+    :---|:---
+    -1|网络错误被忽略
+    0|写确认是不必要的
+    1|请求写确认
+    2|写确认请求跨主服务器和副本集中的一个辅助服务器
+    majority|写确认是从副本集的主服务器请求的
+    
+    基本思想:强的写入关注告诉mongodb,在作出反应之前保持等待,知道一个写入被成功的写入磁盘.
+    
+* Server对象
+    
+   这个对象定义了Mongodb驱动程序应该怎样连接到服务器。
+   Server对象包含诸如创建连接时所使用的主机/端口/池以及超时信息等
+   
+   用来创建MongoClient连接的Server对象的选项
+   
+   选项|说明
+   :---|:---
+   readPrefernce|指定从副本集读取对象时使用的读取首选项.设置读取首选项可以优化读取操作,如仅从辅助服务器读取以释放主服务器.详细:略
+   ssl|布尔值,当设置为true时,表示启用ssl,需要指定sslCA/sslCert/sslKey和sslPass选项来设置ssl证书颁发机构/证书/秘钥和密码
+   poolSize|指定在服务器连接池使用的连接数量,默认是5.
+   sokcetOptions|定义套接字创建选项,如下:<br>noDelay,布尔值,指定无延迟套接字<br>keepAlibe,指定套接字保持活动的时间<br>connectTimeoutMS,指定连接在超时之前等待的时间,单位是毫秒<br>socketTimeoutMS,指定套接字超时之前等待的时间
+   auto_reconnect|布尔值,当为true时,表示该客户端在遇到错误时将尝试重新连接
+   
+* 通过Client对象连接到mongoDB
+   
+   使用MongoClient对象连接到Mongodb,可以分为几步,创建客户端实例,打开到数据库的连接,如果需要,验证到数据库,然后处理注销和关闭.
+   
+   1. 创建MongoClient实例
+   
+   MongoClient(Server,option);
+   Server对象作为第一个参数,数据库的连接选项的对象options作为第二个参数.
+   
+   数据库连接选项:
+   
+   选项|说明
+   :---|:---
+   w|写入关注级别
+   wtimeout|指定等待写入关注结束的时间量,单位是毫秒.这个值会被加到正常的超时值上
+   fsync|布尔值,当为true时,让写请求在返回前等待fsync完成
+   journal|布尔值,当为true时,让写请求在返回前等待日志同步完成
+   retryMilliSeconds|指定重试连接时等待的毫秒数,默认5000
+   numberOfRetries|指定失败之前重试连接的次数,默认5
+   bufferMaxEntries|指定连接失败前被缓冲等待连接操作的最大数量,默认-1,无限制
+   
+   示例:
+   var client=new MongoClient(new Server('localhost',27017,{poolSize:5}),{retryMilliSeconds:500})
+   
+   2. 创建连接
+   
+   client.open(function(err,client){})
+   
+   3. 创建数据库对象
+   
+   var db=client.db('dbname');
+   
+   4. 身份验证,如果需要的话
+   
+   db.authenticate('username','password',function(err,results){});
+   
+   5. 注销数据库
+   
+   db.logout()
+   
+   6. 关闭mongodb连接
+   
+   client.close()
+   
+   * 示例参见 mongodb驱动试验\mongo1.4/MongoClient对象实例连接到Mongodb_db_conect_object.js
+   
+   注意: 该教程使用mongodb@1.4版本,执行时报错 { Error: Cannot find module '../build/Release/bson' <br> 
+   原因是bson模块的文件结构已经变了,解决方法,复制 node_modules\bson\browser_build 到 node_modules\bson\build\Release <br>
+   另外,需要在数据库中,提前创建好用户<br>
+   use testdb;
+   db.createUser({
+    user:'dbadmin',
+    pwd:'123123',
+    roles:['readWrite']
+    });
+    db.auth('dbadmin','123123');
+    
+*  使用MongoClient连接字符串方法连接数据库(这种方法更好)
+    
+    MongoClient.connect(connString,options,callback);
+    
+    connString字符串的语法格式:
+    mongodb://username:password@host:port/database?options
+    
+    callback第一个参数是err,第二个参数是db对象实例
+    
+    * 示例参见: mongodb驱动试验\MongoClient使用连接字符串连接数据库db_connect_string.js
+    
+    注: 此实验使用mongodb 2.2版,且教程中options参数也比较老了
+    
+    *由于教程中使用的mongodb模块比较老,教程中的部分方法已经不再使用,下面的学习中,只参考教程完成里面的例子,但不完全安装教程来进行试验*
+    
+    
+    * 列出数据库  示例参见: mongodb驱动试验/MongoClient列出数据库.js
+    * 创建数据库  示例参见: mongodb驱动试验/MongoClient创建数据库.js
+    * 删除数据库  var newDB=db.db('newDB');//切换数据库 newDB.dropDatabase(function(err,result){})
+    * 示例参见:  mongodb驱动试验/MongoClient创建删除列出数据库db_create_list_delete.js
+    * 获取服务器状态 示例参见: mongodb驱动试验/MongoClient获取服务器状态.js
+    * 列出集合  示例参见: mongodb驱动试验/MongoClient列出集合.js
