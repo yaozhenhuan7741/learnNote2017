@@ -158,6 +158,17 @@ _闭包_:变量被绑定到一个函数的作用域,但不绑定到他的父函�
     ```
     JSON字符串转对象JSON.parse(string)
     JSON对象转字符串JSON.stringify(obj)
+    语法:
+    JSON.stringify(value[, replacer[, space]])
+    value:
+    必需， 一个有效的 JSON 字符串。
+    replacer:
+    可选。用于转换结果的函数或数组。
+    如果 replacer 为函数，则 JSON.stringify 将调用该函数，并传入每个成员的键和值。使用返回值而不是原始值。如果此函数返回 undefined，则排除成员。根对象的键是一个空字符串：""。
+    如果 replacer 是一个数组，则仅转换该数组中具有键值的成员。成员的转换顺序与键在数组中的顺序一样。当 value 参数也为数组时，将忽略 replacer 数组。
+    space:
+    可选，文本添加缩进、空格和换行符，如果 space 是一个数字，则返回值文本在每个级别缩进指定数目的空格，如果 space 大于 10，则文本缩进 10 个空格。space 有可以使用非数字，如：\t。
+
     ```
 14. buffer缓冲
 ```
@@ -1406,9 +1417,135 @@ db.tablename.update({xxxx:xxx,xxx:xxx})
     *由于教程中使用的mongodb模块比较老,教程中的部分方法已经不再使用,下面的学习中,只参考教程完成里面的例子,但不完全安装教程来进行试验*
     
     
-    * 列出数据库  示例参见: mongodb驱动试验/MongoClient列出数据库.js
-    * 创建数据库  示例参见: mongodb驱动试验/MongoClient创建数据库.js
-    * 删除数据库  var newDB=db.db('newDB');//切换数据库 newDB.dropDatabase(function(err,result){})
-    * 示例参见:  mongodb驱动试验/MongoClient创建删除列出数据库db_create_list_delete.js
-    * 获取服务器状态 示例参见: mongodb驱动试验/MongoClient获取服务器状态.js
-    * 列出集合  示例参见: mongodb驱动试验/MongoClient列出集合.js
+* 列出数据库  示例参见: mongodb驱动试验/MongoClient列出数据库.js
+* 创建数据库  示例参见: mongodb驱动试验/MongoClient创建数据库.js
+* 删除数据库  var newDB=db.db('newDB');//切换数据库 newDB.dropDatabase(function(err,result){})
+* 数据库综合 示例参见:  mongodb驱动试验/MongoClient创建删除列出数据库db_create_list_delete.js
+* 获取服务器状态 示例参见: mongodb驱动试验/MongoClient获取服务器状态.js
+* 列出集合  示例参见: mongodb驱动试验/MongoClient列出集合.js
+* 集合综合  示例参见: mongodb驱动试验/MongoClient创建删除列出集合collection_create_list_delete.js
+* 集合的统计信息  示例参见: mongodb驱动试验/MongoClient集合统计信息collection_stat.js
+
+下面是nodejs+mongodb驱动 文档的增删改查
+
+文档更新时的常用运算符:
+
+运算符|说明
+:---|:---
+$inc|指定递增字段,格式:field:inc_value
+$rename|重命名字段,格式field:newName
+$setOnInsert|设置当更新操作中,创建一个新闻当时,其字段的值,格式field:value
+$set|设置现有文档中一个字段的值,格式field:new_value
+$unset|删除指定字段,格式field:''
+$|用作占位符,以更新符合一个更新中的查询条件的第一个元素
+$addToSet|往数组中添加元素,仅当他在数组中不存在时才插入,格式array_field:new_value
+$pop|删除数组中第一个或最后一个条目,如果pop_value=-1,删第一个,1删最后一个,格式array_field:pop_value
+$pullAll|删除数组中的多个值,格式array_field:[value1,value2...]
+$pull|删除与查询语句匹配的数组项,格式array_field:[<query>]
+$push|将条目添加到数组,格式array_field:new_value
+$each|修改$push和$addToSet运算符来追加多个条目用于数组更新,arrar_field:{$each:[value1,value2]}
+$slice|修改$push运算符,限制更新的数组的大小,格式array_field:{$slice:num}
+$sort|修改$push运算符,对数组重新排序
+$bit|对整数值进行按位and和or更新,格式int_field:{and:<integer>}和int_field:{or:<integer>}
+
+
+更改数据库时可以在options中指定的选项
+
+选项|说明
+:---|:---
+w|写入级别
+wtimeout|等待写入时间量
+fsync|布尔值,为true时,等待fsync完成
+journal|布尔值,为true时,等待日志写入完成
+serializeFunctions|为true时,附加到对象的函数存储在文档中应进行序列化
+forceServerObjectId|为true时,客户端设置的任何对象id,在插入过程中将被服务器覆盖
+checkKeys|为true时,文档的键在插入时会进行检查,默认true
+upsert|为true时,如果没有与更新匹配的文档,则插入
+multi|当为true时,如果多个文档匹配,则都会被更新,如果false,只更第一个
+new|为true时,表示返回由findAndModify方法新修改的对象,而不是返回修改前版本
+
+    
+* 文档插入  语法 insert(docs,options,callback) <br>
+示例参见: mongodb驱动试验/mongodb文档插入doc_insert.js
+* 简单查询  find  findOne  语法 find(query,[options],callback) <br> find返回可迭代的游标,findOne返回单个对象 <br>
+对于游标,可以使用toArray或者each方法
+<br>示例参见: mongodb驱动试验/mongodb文档简单查询doc_find.js
+    
+* 文档更新  语法 update(query,update,[options],[callback]) 
+<br>示例参见:  mongodb驱动试验/mongodb文档更新doc_update.js    
+
+* 原子修改 单个文档原子写,防止写入时其他进程同时写入同一文档<br> 语法 findAndModify(query,sort,update,[options],callback),其中sort是个数组,如[['name',1],['type':-1]]<br>
+示例参见: mongodb驱动试验/mongodb文档原子修改doc_modify.js
+    
+* 试验save方法保存文档,比insert和update简单,但是效率低,优点是可以同时满足插入和更新 <br> 语法 save(doc,[options],callback);
+<br> 示例参见: mongodb驱动试验/mongodb文档的save方法doc_save.js
+
+* 试验upsert方法  示例参见: mongodb驱动试验/mongodb文档的upsert方法doc_upsert.js
+* 删除文档  语法: remove(query,[options],callback)示例参见: mongodb驱动试验/mongodb文档的删除doc_remove.js
+
+* 删除单个文档,原子的  语法 findAndRemove(query,sort,[options],callback); 
+<br> 示例参见: mongodb驱动试验/mongodb删除单个文档doc_remove_one.js
+
+------------
+下面学习 高级查询 包括排序/限制/分组/聚合等等等等
+
+数据准备,教程提供的generate_data.js,在nodejs里执行以下即可,这个脚本中,显示定义了一个单词的数组,
+然后分别统计每个单词中的元音和非元音的个数,然后组装成一个对象数据,保存到数据库中.
+
+* query对象运算符
+
+运算符|说明
+:---|:---
+field:value|等于
+$gt|大于,如{size:{$gt:5}}
+$gte|大于等于
+$lt|小于
+$lte|小于等于
+$ne|不等于
+$in|匹配数组中任意项,如 {name:{$in:['zhangsan','lisi']}}
+$nin|匹配不再数组中的项
+$or|或者,数组,用于连接多个查询,如 {$or:[{size:{$gt:5}},{size:{$lt:3}}]}
+$and|并且,数组
+$nor|数组,都不匹配的
+$not|反转表达式
+$exists|字段存在,布尔型,如 {name:{$exists:true}}
+$type|匹配指定类型,值为类型号,在最前边学习mongodb数据类型时列出过
+$mod|取模运算,数组,第一个是除数,第二个是余数,如{age:{$mod:[2,0]}}
+$regex|正则表达式匹配
+$all|数组,必须匹配数组中所有的项
+$elemMatch|子文档的数组中的元素,匹配所有指定条件的文档(暂时理解为,文档的某个字段是数组,但数组的元素还是文档,这里匹配的是数组中的文档),如{myArr:{$elemMatch:{age:{$gt:5}},{size:{$gt:3}}}}
+$size|匹配数组字段指定大小的文档,如{myArr:{$size:5}}
+
+* options对象
+
+查询文档时,可以在options中设置的项
+    
+选项|说明
+:---|:---
+limit|返回文档的最大数量
+sort|排序,数组,1正序,-1倒序
+fields|显示的字段,1显示-1不显示,不能同时使用两者
+skip|跳过的文档数
+hint|使用特定的索引
+explain|执行计划
+snapshot|如果true,则创建快照查询
+timeout|如果true,则游标允许超时
+maxScan|扫描的文档的最大数量,当文档数非常非常大时,不能让查询永远查询下去
+comment|指定将在mongodb日志中输出的字符串,便于诊断问题
+readPreference|指定从哪个服务器上读
+numberOfRetries|重试次数
+partial|如果true,则表示对分片系统间共享的数据进行查询时,游标会返回部分结果
+
+按照教程顺序开始试验
+
+* 查找一组特定的文档  示例参见 mongodb驱动试验/mongodb查找特定文档doc_query.js
+* 统计数量,计数 语法: count([query],[options],callback); 示例参见: 示例参见 mongodb驱动试验/mongodb文档计数doc_count.js
+* 对结果集进行限制 如数量/字段/分页等
+    * 数量 limit  options中的选项  示例参见: mongodb驱动试验/mongodb文档数量限制doc_limit.js
+
+
+
+41. nodejs+mongoose模块
+
+    
+    
