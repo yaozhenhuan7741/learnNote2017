@@ -1523,7 +1523,7 @@ $size|匹配数组字段指定大小的文档,如{myArr:{$size:5}}
 选项|说明
 :---|:---
 limit|返回文档的最大数量
-sort|排序,数组,1正序,-1倒序
+sort|排序,数组,1正序,-1倒序 注:当前版本可以使用对象,如sort:{name:1}
 fields|显示的字段,1显示-1不显示,不能同时使用两者
 skip|跳过的文档数
 hint|使用特定的索引
@@ -1540,10 +1540,29 @@ partial|如果true,则表示对分片系统间共享的数据进行查询时,游
 
 * 查找一组特定的文档  示例参见 mongodb驱动试验/mongodb查找特定文档doc_query.js
 * 统计数量,计数 语法: count([query],[options],callback); 示例参见: 示例参见 mongodb驱动试验/mongodb文档计数doc_count.js
-* 对结果集进行限制 如数量/字段/分页等
-    * 数量 limit  options中的选项  示例参见: mongodb驱动试验/mongodb文档数量限制doc_limit.js
-
-
+* 对结果集进行限制 如数量/字段/分页等(options中的选项)
+    * 数量 limit    示例参见: mongodb驱动试验/mongodb文档数量限制doc_limit.js
+    * 显示字段 field 示例参见: mongodb驱动试验/mongodb文档显示字段限制doc_field.js
+    * 分页  skip+limit+sort 一定要排序,保证顺序一致  示例参见: mongodb驱动试验/mongodb文档分页doc_paging.js
+    * 排序 sort 略
+    * 查找不通值(去重) distinct 语法 distinct(key,[query],[options],callback) 示例参见: mongodb驱动试验/mongodb文档去重doc_distinct.js
+    * 结果分组 group 注:此方法在高版本mongodb中已经不支持,使用聚合方法来实现  语法 group(keys,query,initial,reduce,finalize,command,[options],callback);
+        说明: <br>
+        keys,分组依据,可以是数组/对象或函数;<br>
+        query,查询对象;<br>
+        initial,汇总时,初始对象;<br>
+        reduce,函数,两个参数,obj和prev,obj指当前文档,prev指initial中指定的对象,意思是,当发现一个文档时,对prev进行相应的处理,比如计数/求和等等<br>
+        finalize,函数,参数是obj,从initial中的到的对象,进过reduce加工后的最终对象<br>
+        command:布尔值,默认true.为true时,使用内部group命令,而不是eval()<br>
+        options:可以定义readPreference选项<br>
+        callback:回调函数<br>
+        * 示例参见: mongodb驱动试验/mongodb文档分组doc_group.js   //由于版本问题,示例执行失败
+    
+    * 聚合函数
+        
+        
+        
+        
 
 41. nodejs+mongoose模块
 
