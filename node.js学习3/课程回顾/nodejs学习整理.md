@@ -1558,8 +1558,53 @@ partial|如果true,则表示对分片系统间共享的数据进行查询时,游
         callback:回调函数<br>
         * 示例参见: mongodb驱动试验/mongodb文档分组doc_group.js   //由于版本问题,示例执行失败
     
-    * 聚合函数
-        
+    * <b>聚合函数 aggregate 语法 aggregate(operation,[options],callback); <br>
+     operation: 聚合运算符的数组;管道,结果传输到下一个运算符,$加上字段名,表示引用字段值 <br>
+     常用聚合运算符<b><br>
+     
+     ###聚合函数很重要,很强大,需要深入学习一下
+     
+	运算符|说明
+	:---|:---
+	$project|通过重命名/添加或删除字段重塑文档,也可以重新计算值,并添加子文档,如:<br>a. 包括title,不包括name,{$project:{title:1,name:0}}<br>b. name重命名为title {$project:{title:"$name"}}<br>c.新增total字段,值为xx和xx的和,{$project:{total:{$add:["$price","$tax"]}}}
+	$match|匹配,查询,{$match:{value:{$gt:5}}}
+	$limit|限制数量,{$limit:5}
+	$skip|跳过的文档数量,{$skip:10}
+	$unwind|分割数组字段,并为每个值创建一个单独的文档,{$unwind:"$myArr"}  //我的理解是行转列
+	$group|分组
+	$sort|排序
+		
+	*$group表达式运算符*
+		
+	运算符|说明
+	:---|:---
+	$addToSet|返回一组文档中所有文档所选字段的全部唯一值的数组,例如:colors:{$addToSet:"$color"} //我的理解是列转行,并且去重
+	$first|返回一组文档中一个字段的第一个值,如firstValue:{$first:"$value"}
+	$last|同上,最后一个值
+	$max|最大值
+	$min|最小值
+	$avg|平均值
+	$push|返回一组文档中所有文档所选字段的全部值的数组 //我的理解是 列转行,不去重
+	$sum|求和
+	
+	*可用在聚合表达式的字符串和算数运算符*
+	
+	运算符|说明
+	:---|:---
+	$add|求和
+	$divide|第一个数除以第二个数,如:valuePlus5:{$divide:["$value",5]}
+	$mod|取模
+	$multiply|乘积
+	$subtract|差
+	$concat|连接两个字符串
+	$strcasecmp|比较两个字符串,并返回一个整数反映比较的结果. ???不懂
+	$substr|字符串包含
+	$toLower|小写
+	$toUpper|大写
+	
+	* 示例参见:mongodb驱动试验/mongodb文档聚合doc_aggregate.js  
+
+		
         
         
         
