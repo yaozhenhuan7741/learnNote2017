@@ -1604,7 +1604,9 @@ partial|如果true,则表示对分片系统间共享的数据进行查询时,游
 	
 	* 示例参见:mongodb驱动试验/mongodb文档聚合doc_aggregate.js  
 
-		
+		重点 分组 限制 排序 分组的运算符 字符串数组算数运算符<br>
+		分组:类似于sql中的group by <br>
+	
         
         
         
