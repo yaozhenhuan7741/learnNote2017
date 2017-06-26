@@ -1611,5 +1611,144 @@ partial|如果true,则表示对分片系统间共享的数据进行查询时,游
 
 41. nodejs+mongoose模块
 
+  注：教程中的mongoose版本较老，部分示例已经无法执行，学习过程中，需要参考官网。  
+  mongoose 文档对象模型
     
+* 安装  npm  install  mongoose
+* 连接数据库  connect(uri,options,[callback]);
+* 断开连接 mongoose.disconnect();
+
+  * 示例参见: mongoose试验/mongoose连接mongoose_connect.js
+  
+* 模式(Schema)
+    
+  * 类型：String Number Boolean或bool Array Buffer Date ObjectId或Oid Mixd(混合)
+  
+  * 创建模式 new Schema(definition,options);
+  
+  options对象定义与mongodb服务器上的集合的交互
+  
+  选项|说明
+  :---|:---
+  autoIndex|布尔值，如果true，表示开启自动索引，默认true
+  bufferCommands|布尔值，如果true，表示由于连接问题而无法完成的命令被缓存
+  capped|指定封顶集合中的最大文件数
+  collection|指定集合名称
+  id|布尔值，如果true，则使模型中的文档有对应于该对象的_id值的id获取器，默认ture
+  _id|布尔值，默认true，表示mongoose自动为文档分配_id字段
+  read|指定副本的读取首选项
+  safe|布尔值，默认true，表示mongoose应用一个写入关注到更新数据库的请求
+  strict|布尔值，默认true，表示没有出现在定义的模式中的对象传入属性，不会保存在数据库中（我的理解是，只有在模式中定义的字段才会保存到数据库）
+  
+  例如： 
+  ```
+    var schema=new Schema({
+        name:String,
+        average:Number,
+        scores:[Number]
+    },{collection:'students'});
+  ```
+  * 索引 index
+  ```
+  //两种方式
+  var schema=new Schema({
+    name:{type:String,index:1}
+  });
+  //或
+  var schema=new Schema({name:String});
+  schema.index({name:1});
+  
+  //查看索引列表
+  schema.indexes();
+
+  ```
+  * 唯一性 unique
+  ```
+  var schema=new Schema({
+    name:{type:String,index:1,unique:true}
+  })
+  ```
+  * 强制字段的必要性 required
+  ```
+  var schema=new Schema({
+    name:{type:String,index:1,unique:true,required:true}
+  });
+  ```
+  * 添加Schema对象的方法 （在模式中添加函数）methods
+  ```
+  var schema=new Schema({
+    first:String,
+    last:String
+  });
+  schema.methods.fullName=function(){
+    return this.first+" "+this.last; 
+  }
+  ```
+  * 将words库中的word_stats表，用模式实现  示例参见: mongoose试验/mongoose_word_schema.js
+  
+* 编译模型
+  
+  * 语法 model(name,[schema],[collection],[skipInit]);
+  
+    name参数，是以后用model(name)发现该模型可以使用的字符串。
+    schema是Schema对象。
+    collection，是要连接的集合名
+    skipInit,布尔值，默认false,如果true，则初始化过程被跳过，并创建一个没有连接到数据库的简单model对象
+    如： 
+    ```
+    //编译
+    var Words=mongoose.model('Words',wordSchema);
+    //调用 
+    mongoose.model('Words');
+    ```
+* mongoose中的query对象
+    
+  大多数情况下，使用mongoose model对象，类似于mongodb驱动中的collection对象。
+  有find() remove() update() count() distinct aggregate()等。
+  
+  使用model对象，如果传入callback函数，则将请求发送到mongodb数据库，并在callback中返回结果。
+  如果不传入callback函数，则不会发送请求道mongodb数据库，而是返回一个query对象。直到调用exec(callback)。
+  如：
+  ```
+  //callback
+  model.find({value:{$gt:5}},{sort:{'value':1},fields:{name:1,title:1,value:1}},function(err,results){xxx});
+  
+  //exec
+  var query=model.find();
+  query.where('value').gt(5);
+  query.sort('-value');
+  query.select('name title value');
+  query.exec(function(err,results){});
+  
+  ```
+  * 可以在query和Model对象上设置的数据库操作的方法
+  
+  方法|说明
+  :---|:---
+  create(obj,[callback])|插入数据库，obj是一个JavaScript对象或者对象数组；回掉函数第一个参数时err，被保存的文档是其他参数，如function(err,doc1,doc2...)
+  count([query],[callback])|返回匹配的项数
+  distinct([query],[field],[callback])|返回数组
+  find([query],[options],[callback])|返回匹配的文档对象的数组
+  findOne([query],[options],[callback])|返回匹配的第一个文档对象
+  findOneAndRemove([query],[options],[callback])|查找并删除第一个匹配的
+  findOneAndUpdate([query],[update],[options],[callback])|查找并更新第一个匹配的
+  remove([query],[options],[callback])|删除
+  update([query],[update],[options],[callback])|更新
+  aggregate(operation,[callback])|聚合
+  
+  * 可以在query和Model对象上设置的数据库操作的选项
+  
+  方法|说明
+  :---|:---
+  setOptions(options)|设置执行数据库请求时，用于与mongodb交互的选项
+  limit(number)|限制数量
+  select(fields)|指定包含在结果集的字段，空格分隔或者用对象；在字段名前边加一个+，强制列入该字段，即使文档中不存在该字段，-号排除该字段。如：select('name +title -value');select({name:1,title:1,value:0});
+  sort(fields)|排序，可以空格分割，也可以用对象
+  skip(number)|跳过
+  reqd(preference)|读取首选项
+  snapshot(boolean)|为true时，把查询设置为快照查询
+  safe(boolean)|为true时，写入关注
+  hint(hints)|强制使用或者排除索引 1表示包含，-1排除
+  comment(string)|将string连同查询添加到mongodb日志中
+  
     
