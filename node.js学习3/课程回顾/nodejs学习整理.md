@@ -1751,4 +1751,72 @@ partial|如果true,则表示对分片系统间共享的数据进行查询时,游
   hint(hints)|强制使用或者排除索引 1表示包含，-1排除
   comment(string)|将string连同查询添加到mongodb日志中
   
-    
+  * 可以在query对象中定义查询运算符的方法
+  
+  方法|说明
+  :---|:---
+  where(path,[value])|为运算符设置当前字段路径，如果也设置了则表示该字段等于这个value的文档
+  gt([path],value)|大于
+  gte([path],value)|大于等于
+  lt([path],value)|小于
+  lte([path],value)|小于等于
+  ne([path],value)|不等于
+  in([path],array)|包含在
+  nin([path],array)|不包含在
+  or(conditions)|或者，conditions是数组
+  and(conditions)|并且
+  nor(conditions)|都不匹配
+  exists([path],boolean)|匹配具有指定字段的文档和没有指定字段的文档
+  mod([path],value,remainder)|取模
+  regex([path],expression)|正则匹配
+  all([path],array)|包含所有数组元素
+  elemMatch([path],criteria)|子文档匹配。criteria可以是对象或函数。
+  size([path],value)|选择数组字段指定大小的文档
+  
+  * 返回值 返回值是Document对象
+  
+  * 可以在Document对象上使用的方法和属性
+  
+  方法/属性|说明
+  :---|:---
+  equals(doc)|如果这个docume对象和doc匹配，则返回true
+  id|包含文档的_id
+  get(path,[type])|返回指定路径的值，可以通过type强制转换类型
+  set(path,value,[type])|设置值
+  update(update,[options],[callback])|更新
+  save([callback])|对将Document对象的修改，保存到库
+  remove([callback])|回调的参数是err
+  isNew|布尔值，如果true，表示一个还没有被存储在mongodb中的模型的新对象
+  isInit(path)|如果这个路径已经被初始化，则true
+  isSelected(path)|如果这个路径的字段是从mongodb返回的结果集中选择的，则true
+  isModified(path)|如果被修改，但未被保存到库，则true
+  markModified(path)|标记为正在被修改，使得他会被保存/更新到数据库
+  modifiedPaths()|返回已被修改的路径的数组
+  toJSON()|返回document对象的json字符串表示
+  toObject()|返回一个普通的JavaScript对象，但无document对象的额外属性和方法
+  toString()|返回document对象的字符串形式
+  validate(callback)|在文档上执行验证，参数是err
+  invalidate（path,msg,value)|将路径标识为无效，从而导致验证失败，msg和value是错误信息和value
+  errors|包含在文档中的错误的列表
+  schema|链接到定义了document对象的模型的Schema对象
+  
+  
+* 利用mongoose查找文档
+
+  由于mongoose的query对象很灵活，使得同一个查询有多种写法，下面三种等价
+  ```
+  //第一种 常规
+  var query1=model.find({name:'test'},{limit:10,skip:5,fields:{name:1,value:1}});
+  //方法二 管道
+  var query2=model.find().where('name','test').limit(10).skip(5).select({name:1,value:1});
+  //第三种 query对象
+  var query3=model.find();
+  query3.where('name','test');
+  query3.limit(10).skip(5);
+  query3.select({name:1,value:1});
+  
+  ```
+  
+  注：与mongodb驱动的区别，find()查询，mongodb返回的是游标，mongoose返回的是文档数组
+  
+  * 示例参见:  mongoose试验/mongoose文档查找mongoose_find.js
