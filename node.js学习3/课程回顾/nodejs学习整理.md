@@ -1820,3 +1820,37 @@ partial|如果true,则表示对分片系统间共享的数据进行查询时,游
   注：与mongodb驱动的区别，find()查询，mongodb返回的是游标，mongoose返回的是文档数组
   
   * 示例参见:  mongoose试验/mongoose文档查找mongoose_find.js
+  
+* 利用mongoose添加文档  create(obj,callback); save(callback);
+  
+  * 示例参见: mongoose试验/mongoose文档添加mongoose_create.js
+  
+* 利用mongoose更新文档 save/update
+  
+  * 通过save更新文档  示例参见: mongoose试验/mongoose文档更新mongoose_save.js
+  * 更新单个文档 doc.update 示例参见： mongoose试验/mongoose更新单个文档mongoose_update_one.js
+  * 更新多个文档 model.update 示例参见:  mongoose试验/mongoose更新多个文档mongoose_update_many.js
+  
+* 利用mongoose删除文档 remove
+  
+  * 删除单个文档  doc.remove 示例参见: mongoose试验/mongoose删除单个文档mongoose_remove_one.js
+  * 删除多个文档  model.remove 示例参见: mongoose试验/mongoose删除多个文档mongoose_remove_many.js
+  
+* 利用mongoose聚合文档 aggregate
+  
+  既可以使用mongodb驱动中的aggregate方法，也可以使用aggregate对象，类似与query对象的方法。
+  
+  * aggregate对象的管道方法
+  
+  方法|说明
+  :---|:---
+  exec(callback)|执行
+  append(operations)|在aggregate对象的管道中，追加额外的操作。如： append({match:{size:1}},{$group:{_id:"$title"}},{$limit:2})
+  group(operations)|追加group操作。如 group({_id:"$title",largest:{$max:"$size"})
+  limit(number)|限制数量
+  match(operations)|追加匹配操作
+  project(operations)|追加投影操作
+  read(preference)|读取首选项
+  skip(num)|跳过
+  sort(fields)|排序
+  unwind(arrFields)|拆数组为文档

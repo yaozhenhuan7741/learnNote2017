@@ -21,10 +21,10 @@ wordSchema.methods.startsWith=function (letter) {
 };
 
 exports.wordSchema=wordSchema;
-console.log("Required Paths: ");
-console.log(wordSchema.requiredPaths());
-console.log('Index: ');
-console.log(wordSchema.indexes());
+//console.log("Required Paths: ");
+//console.log(wordSchema.requiredPaths());
+//console.log('Index: ');
+//console.log(wordSchema.indexes());
 
 
 
