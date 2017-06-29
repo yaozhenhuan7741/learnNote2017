@@ -1856,3 +1856,51 @@ partial|如果true,则表示对分片系统间共享的数据进行查询时,游
   unwind(arrFields)|拆数组为文档
   
   * 示例参见: mongoose试验/mongoose聚合mongoose_aggregate.js
+  
+* 使用验证框架 validate  语法 字段.validate(function,error)  如：WordModel.schema.path('word').validate()
+  
+  function是验证函数，返回布尔值，error是验证失败时返回的错误信息，可以自定义
+  
+  错误对象包含一下字段：<br>
+  * err.errors.<field>.message  //这个时验证函数自定义的信息
+  * err.errors.<field>.type  //验证错误类型
+  * err.errors.<field>.path  //验证失败的对象路径（字段）
+  * err.errors.<field>.value //验证失败的值
+  * err.name //错误类型名称
+  * err.message //错误消息
+  
+  * 示例参见: mongoose试验/mongoose验证框架mongoose_validate.js
+  
+* 中间件函数
+  
+  注：中间件函数在官网上说各个版本差异较大，教程参考为主,4.7版本之前的可以正常执行，4.8之后，中间件函数没有被调用。
+  <br>http://mongoosejs.com/docs/middleware.html <br>
+  mongoose的Document对象处理步骤  init() validate() save()/remove()  <br>
+  init()时，Document对象还没有生成，后边已经生成了Document对象。
+  
+  可以为这几个方法，添加中间件函数 pre()/post()  之前/之后  如：word保存之前，需要添加size等字段，就可以用WordModel.schema.pre('save',function(next){xxxxx;next()});
+  
+  中间件函数，可以同步调用，也可以异步调用（个人感觉同步调用比较好，异步的话，执行顺序没法控制）
+  
+  pre() 参数是next, post()参数doc对象
+  
+  
+```
+//同步调用：
+schema.pre('save',function(next){
+next();
+})
+//异步调用
+schema.pre('save',true,function(next,done){
+    next();
+    doAsync(done);
+})
+```
+
+  * 示例参见: mongoose试验/mongoose中间件函数mongoose_middleware.js
+  
+  
+-----------
+  
+下面事mongodb的一些高级应用
+  
