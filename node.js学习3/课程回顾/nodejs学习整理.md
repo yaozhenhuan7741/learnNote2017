@@ -1854,3 +1854,5 @@ partial|如果true,则表示对分片系统间共享的数据进行查询时,游
   skip(num)|跳过
   sort(fields)|排序
   unwind(arrFields)|拆数组为文档
+  
+  * 示例参见: mongoose试验/mongoose聚合mongoose_aggregate.js
