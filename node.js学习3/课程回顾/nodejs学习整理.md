@@ -1613,5 +1613,296 @@ partial|如果true,则表示对分片系统间共享的数据进行查询时,游
 
 41. nodejs+mongoose模块
 
+  注：教程中的mongoose版本较老，部分示例已经无法执行，学习过程中，需要参考官网。  
+  mongoose 文档对象模型
     
+* 安装  npm  install  mongoose
+* 连接数据库  connect(uri,options,[callback]);
+* 断开连接 mongoose.disconnect();
+
+  * 示例参见: mongoose试验/mongoose连接mongoose_connect.js
+  
+* 模式(Schema)
     
+  * 类型：String Number Boolean或bool Array Buffer Date ObjectId或Oid Mixd(混合)
+  
+  * 创建模式 new Schema(definition,options);
+  
+  options对象定义与mongodb服务器上的集合的交互
+  
+  选项|说明
+  :---|:---
+  autoIndex|布尔值，如果true，表示开启自动索引，默认true
+  bufferCommands|布尔值，如果true，表示由于连接问题而无法完成的命令被缓存
+  capped|指定封顶集合中的最大文件数
+  collection|指定集合名称
+  id|布尔值，如果true，则使模型中的文档有对应于该对象的_id值的id获取器，默认ture
+  _id|布尔值，默认true，表示mongoose自动为文档分配_id字段
+  read|指定副本的读取首选项
+  safe|布尔值，默认true，表示mongoose应用一个写入关注到更新数据库的请求
+  strict|布尔值，默认true，表示没有出现在定义的模式中的对象传入属性，不会保存在数据库中（我的理解是，只有在模式中定义的字段才会保存到数据库）
+  
+  例如： 
+  ```
+    var schema=new Schema({
+        name:String,
+        average:Number,
+        scores:[Number]
+    },{collection:'students'});
+  ```
+  * 索引 index
+  ```
+  //两种方式
+  var schema=new Schema({
+    name:{type:String,index:1}
+  });
+  //或
+  var schema=new Schema({name:String});
+  schema.index({name:1});
+  
+  //查看索引列表
+  schema.indexes();
+
+  ```
+  * 唯一性 unique
+  ```
+  var schema=new Schema({
+    name:{type:String,index:1,unique:true}
+  })
+  ```
+  * 强制字段的必要性 required
+  ```
+  var schema=new Schema({
+    name:{type:String,index:1,unique:true,required:true}
+  });
+  ```
+  * 添加Schema对象的方法 （在模式中添加函数）methods
+  ```
+  var schema=new Schema({
+    first:String,
+    last:String
+  });
+  schema.methods.fullName=function(){
+    return this.first+" "+this.last; 
+  }
+  ```
+  * 将words库中的word_stats表，用模式实现  示例参见: mongoose试验/mongoose_word_schema.js
+  
+* 编译模型
+  
+  * 语法 model(name,[schema],[collection],[skipInit]);
+  
+    name参数，是以后用model(name)发现该模型可以使用的字符串。
+    schema是Schema对象。
+    collection，是要连接的集合名
+    skipInit,布尔值，默认false,如果true，则初始化过程被跳过，并创建一个没有连接到数据库的简单model对象
+    如： 
+    ```
+    //编译
+    var Words=mongoose.model('Words',wordSchema);
+    //调用 
+    mongoose.model('Words');
+    ```
+* mongoose中的query对象
+    
+  大多数情况下，使用mongoose model对象，类似于mongodb驱动中的collection对象。
+  有find() remove() update() count() distinct aggregate()等。
+  
+  使用model对象，如果传入callback函数，则将请求发送到mongodb数据库，并在callback中返回结果。
+  如果不传入callback函数，则不会发送请求道mongodb数据库，而是返回一个query对象。直到调用exec(callback)。
+  如：
+  ```
+  //callback
+  model.find({value:{$gt:5}},{sort:{'value':1},fields:{name:1,title:1,value:1}},function(err,results){xxx});
+  
+  //exec
+  var query=model.find();
+  query.where('value').gt(5);
+  query.sort('-value');
+  query.select('name title value');
+  query.exec(function(err,results){});
+  
+  ```
+  * 可以在query和Model对象上设置的数据库操作的方法
+  
+  方法|说明
+  :---|:---
+  create(obj,[callback])|插入数据库，obj是一个JavaScript对象或者对象数组；回掉函数第一个参数时err，被保存的文档是其他参数，如function(err,doc1,doc2...)
+  count([query],[callback])|返回匹配的项数
+  distinct([query],[field],[callback])|返回数组
+  find([query],[options],[callback])|返回匹配的文档对象的数组
+  findOne([query],[options],[callback])|返回匹配的第一个文档对象
+  findOneAndRemove([query],[options],[callback])|查找并删除第一个匹配的
+  findOneAndUpdate([query],[update],[options],[callback])|查找并更新第一个匹配的
+  remove([query],[options],[callback])|删除
+  update([query],[update],[options],[callback])|更新
+  aggregate(operation,[callback])|聚合
+  
+  * 可以在query和Model对象上设置的数据库操作的选项
+  
+  方法|说明
+  :---|:---
+  setOptions(options)|设置执行数据库请求时，用于与mongodb交互的选项
+  limit(number)|限制数量
+  select(fields)|指定包含在结果集的字段，空格分隔或者用对象；在字段名前边加一个+，强制列入该字段，即使文档中不存在该字段，-号排除该字段。如：select('name +title -value');select({name:1,title:1,value:0});
+  sort(fields)|排序，可以空格分割，也可以用对象
+  skip(number)|跳过
+  reqd(preference)|读取首选项
+  snapshot(boolean)|为true时，把查询设置为快照查询
+  safe(boolean)|为true时，写入关注
+  hint(hints)|强制使用或者排除索引 1表示包含，-1排除
+  comment(string)|将string连同查询添加到mongodb日志中
+  
+  * 可以在query对象中定义查询运算符的方法
+  
+  方法|说明
+  :---|:---
+  where(path,[value])|为运算符设置当前字段路径，如果也设置了则表示该字段等于这个value的文档
+  gt([path],value)|大于
+  gte([path],value)|大于等于
+  lt([path],value)|小于
+  lte([path],value)|小于等于
+  ne([path],value)|不等于
+  in([path],array)|包含在
+  nin([path],array)|不包含在
+  or(conditions)|或者，conditions是数组
+  and(conditions)|并且
+  nor(conditions)|都不匹配
+  exists([path],boolean)|匹配具有指定字段的文档和没有指定字段的文档
+  mod([path],value,remainder)|取模
+  regex([path],expression)|正则匹配
+  all([path],array)|包含所有数组元素
+  elemMatch([path],criteria)|子文档匹配。criteria可以是对象或函数。
+  size([path],value)|选择数组字段指定大小的文档
+  
+  * 返回值 返回值是Document对象
+  
+  * 可以在Document对象上使用的方法和属性
+  
+  方法/属性|说明
+  :---|:---
+  equals(doc)|如果这个docume对象和doc匹配，则返回true
+  id|包含文档的_id
+  get(path,[type])|返回指定路径的值，可以通过type强制转换类型
+  set(path,value,[type])|设置值
+  update(update,[options],[callback])|更新
+  save([callback])|对将Document对象的修改，保存到库
+  remove([callback])|回调的参数是err
+  isNew|布尔值，如果true，表示一个还没有被存储在mongodb中的模型的新对象
+  isInit(path)|如果这个路径已经被初始化，则true
+  isSelected(path)|如果这个路径的字段是从mongodb返回的结果集中选择的，则true
+  isModified(path)|如果被修改，但未被保存到库，则true
+  markModified(path)|标记为正在被修改，使得他会被保存/更新到数据库
+  modifiedPaths()|返回已被修改的路径的数组
+  toJSON()|返回document对象的json字符串表示
+  toObject()|返回一个普通的JavaScript对象，但无document对象的额外属性和方法
+  toString()|返回document对象的字符串形式
+  validate(callback)|在文档上执行验证，参数是err
+  invalidate（path,msg,value)|将路径标识为无效，从而导致验证失败，msg和value是错误信息和value
+  errors|包含在文档中的错误的列表
+  schema|链接到定义了document对象的模型的Schema对象
+  
+  
+* 利用mongoose查找文档
+
+  由于mongoose的query对象很灵活，使得同一个查询有多种写法，下面三种等价
+  ```
+  //第一种 常规
+  var query1=model.find({name:'test'},{limit:10,skip:5,fields:{name:1,value:1}});
+  //方法二 管道
+  var query2=model.find().where('name','test').limit(10).skip(5).select({name:1,value:1});
+  //第三种 query对象
+  var query3=model.find();
+  query3.where('name','test');
+  query3.limit(10).skip(5);
+  query3.select({name:1,value:1});
+  
+  ```
+  
+  注：与mongodb驱动的区别，find()查询，mongodb返回的是游标，mongoose返回的是文档数组
+  
+  * 示例参见:  mongoose试验/mongoose文档查找mongoose_find.js
+  
+* 利用mongoose添加文档  create(obj,callback); save(callback);
+  
+  * 示例参见: mongoose试验/mongoose文档添加mongoose_create.js
+  
+* 利用mongoose更新文档 save/update
+  
+  * 通过save更新文档  示例参见: mongoose试验/mongoose文档更新mongoose_save.js
+  * 更新单个文档 doc.update 示例参见： mongoose试验/mongoose更新单个文档mongoose_update_one.js
+  * 更新多个文档 model.update 示例参见:  mongoose试验/mongoose更新多个文档mongoose_update_many.js
+  
+* 利用mongoose删除文档 remove
+  
+  * 删除单个文档  doc.remove 示例参见: mongoose试验/mongoose删除单个文档mongoose_remove_one.js
+  * 删除多个文档  model.remove 示例参见: mongoose试验/mongoose删除多个文档mongoose_remove_many.js
+  
+* 利用mongoose聚合文档 aggregate
+  
+  既可以使用mongodb驱动中的aggregate方法，也可以使用aggregate对象，类似与query对象的方法。
+  
+  * aggregate对象的管道方法
+  
+  方法|说明
+  :---|:---
+  exec(callback)|执行
+  append(operations)|在aggregate对象的管道中，追加额外的操作。如： append({match:{size:1}},{$group:{_id:"$title"}},{$limit:2})
+  group(operations)|追加group操作。如 group({_id:"$title",largest:{$max:"$size"})
+  limit(number)|限制数量
+  match(operations)|追加匹配操作
+  project(operations)|追加投影操作
+  read(preference)|读取首选项
+  skip(num)|跳过
+  sort(fields)|排序
+  unwind(arrFields)|拆数组为文档
+  
+  * 示例参见: mongoose试验/mongoose聚合mongoose_aggregate.js
+  
+* 使用验证框架 validate  语法 字段.validate(function,error)  如：WordModel.schema.path('word').validate()
+  
+  function是验证函数，返回布尔值，error是验证失败时返回的错误信息，可以自定义
+  
+  错误对象包含一下字段：<br>
+  * err.errors.<field>.message  //这个时验证函数自定义的信息
+  * err.errors.<field>.type  //验证错误类型
+  * err.errors.<field>.path  //验证失败的对象路径（字段）
+  * err.errors.<field>.value //验证失败的值
+  * err.name //错误类型名称
+  * err.message //错误消息
+  
+  * 示例参见: mongoose试验/mongoose验证框架mongoose_validate.js
+  
+* 中间件函数
+  
+  注：中间件函数在官网上说各个版本差异较大，教程参考为主,4.7版本之前的可以正常执行，4.8之后，中间件函数没有被调用。
+  <br>http://mongoosejs.com/docs/middleware.html <br>
+  mongoose的Document对象处理步骤  init() validate() save()/remove()  <br>
+  init()时，Document对象还没有生成，后边已经生成了Document对象。
+  
+  可以为这几个方法，添加中间件函数 pre()/post()  之前/之后  如：word保存之前，需要添加size等字段，就可以用WordModel.schema.pre('save',function(next){xxxxx;next()});
+  
+  中间件函数，可以同步调用，也可以异步调用（个人感觉同步调用比较好，异步的话，执行顺序没法控制）
+  
+  pre() 参数是next, post()参数doc对象
+  
+  
+```
+//同步调用：
+schema.pre('save',function(next){
+next();
+})
+//异步调用
+schema.pre('save',true,function(next,done){
+    next();
+    doAsync(done);
+})
+```
+
+  * 示例参见: mongoose试验/mongoose中间件函数mongoose_middleware.js
+  
+  
+-----------
+  
+下面事mongodb的一些高级应用
+  
