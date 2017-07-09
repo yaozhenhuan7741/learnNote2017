@@ -1906,3 +1906,10 @@ schema.pre('save',true,function(next,done){
   
 下面事mongodb的一些高级应用
   
+* 索引相关
+* 封顶集合
+* 应用复制
+* 实施分片
+* gridfs store
+* mongodb修复
+* mongodb备份
