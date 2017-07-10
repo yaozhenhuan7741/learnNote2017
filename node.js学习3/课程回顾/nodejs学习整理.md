@@ -1947,7 +1947,25 @@ schema.pre('save',true,function(next,done){
         //使用schema的index方法
         s.schema.path.('some.path').index({unique:true,sparse:true});
         ```
-* 封顶集合
+* 封顶集合 capped
+
+  * 创建封顶集合的方法
+  ```
+  //shell创建
+  db.createCollection('log',{capped:true,size:5242880,max:5000})
+  //mongodb nodejs原生驱动创建
+  db.createCollection('newCollection',{capped:true,size:5242880,max:5000},function(err,collection){})
+  //mongoose创建
+  var s=new Schema({
+    name:String,
+    value:Number
+  },{
+    capped:true,
+    size:5242880,
+    max:5000
+  })
+  
+  ```
 * 应用复制
 * 实施分片
 * gridfs store
