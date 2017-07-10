@@ -1907,6 +1907,46 @@ schema.pre('save',true,function(next,done){
 下面事mongodb的一些高级应用
   
 * 索引相关
+
+  * mongodb支持的索引类型
+  
+  索引|说明
+  :---|:---
+  _id|mongodb默认对_id索引，唯一。
+  单字段|在单字段上索引，可以按升序或者降序排序，不需要唯一。例如 {name:-1}
+  复合|在多个字段上索引。如 {name:1,value:-1}
+  多键|对数组中的每个元素进行索引。例如 {myObjs.score:1}
+  地理空间的|根据2d或者2sphere坐标创建一个地理空间索引。例如 {'locs','2d'}  //没看懂
+  文本|文本索引，按照单词包含的字符串元素索引，不包含the an a等单词。例如 {comment:'text'}
+  散列|当使用基于散列的分片时，可以使用散列索引。例如{key:'hashed'}
+  
+  * 索引的属性
+    unique 唯一
+    sparse|该索引跳过不包含被索引字段的文档。比如索引name字段，某个文档不包含name字段，则该文档会被跳过
+    ttl|生存期，该索引跟踪插入的时间，被删除已经过期的最早的条目
+    
+  * 创建索引的方法
+    1. 从shell创建  ensureIndex(index,properties)如 db.myCollection.ensureIndex({name:1},{background:true,unique:true,sparse:true})
+    2. 从mongodb nodejs原生驱动创建 ensureIndex(collention,index,options,callback) 如 
+        ```
+        var MongoClient=require('mongodb').MongoClient;
+        Mongoclient.connect('mongodb://localhost/',function(err,db){
+            db.ensureIndex('myCollection',{name:1},
+                {background:true,unique:true,sparse:true},
+                function(err){
+                    if(!err)console.log('index created');
+                }
+        })
+        ```
+    3. 使用mongoose创建索引
+        ```
+        //通过定义schema创建
+        var s=new Schema({
+            name:{type:String,index:true,unique:true,sparse:true}
+        });
+        //使用schema的index方法
+        s.schema.path.('some.path').index({unique:true,sparse:true});
+        ```
 * 封顶集合
 * 应用复制
 * 实施分片
