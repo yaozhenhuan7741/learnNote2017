@@ -1965,6 +1965,7 @@ schema.pre('save',true,function(next,done){
     max:5000
   })
   
+  
   ```
 * 应用复制
 * 实施分片
