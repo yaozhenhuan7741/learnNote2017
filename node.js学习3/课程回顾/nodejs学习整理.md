@@ -1968,7 +1968,172 @@ schema.pre('save',true,function(next,done){
   
   ```
 * 应用复制
-* 实施分片
+	* 主服务器  (读写)
+	* 辅助服务器(只读)
+	* 仲裁服务器(用于仲裁出主服务器)
+	
+	* 复制策略
+		* 服务器数量(奇数,便于仲裁)
+		* 副本集数
+		* 容错
+	* 部署副本集
+		* 网络 几台服务需要能够相互访问,通过主机名或dns
+		* 配置replSet值,为副本集设置唯一名称,如mongod --port 27017 --dbpath /data --replSet rs0
+		* 在副本集的主服务器上使用客户端执行 rs.initiate()
+		* 在主服务器上,使用客户端执行 rs.add(辅助服务器主机名或域名)
+		* 查看每台服务器上的配置 rs.conf()
+		* 使用,连接数据库时的读取首选项,可以设置从哪个副本集读取
+		
+		* 试验(参考了网上的资料,这里只进行了基础的实验,高级功能没有实验)
+			1. 启动三个mongod,用不同的端口,但是副本集名称一致
+				mongod --port 27017 --dbpath f:\data1 --replSet rs0
+				mongod --port 27018 --dbpath f:\data1 --replSet rs0
+				mongod --port 27019 --dbpath f:\data1 --replSet rs0
+			2. 初始化
+				在主服务上执行初始化,加入将27017的那台当做主服务器,则
+				mongo --port 27017 //连接服务器
+				rs.initiate()
+			3. 初始化完成后,添加从服务器
+				rs.add('hostname:27018');   //试验时,使用127和localhost都失败了,换成了主机名malei-PC成功
+				rs.add('hostname:27019');
+			4. 查看配置
+				rs.conf()
+			5. 查看状态
+				rs.status()
+			6. 测试
+				在主服务上插入数据,然后查询,可以查到
+				然后切换到从服务器,查询,发现报错(code:13435),这是因为从服务器默认是不提供服务的,需要执行 rs.slaveOk(),然后执行查询,这个只对当前连接有效
+			7. 查看同步状态
+				db.printSlaveReplicationInfo()
+			8. 添加仲裁服务器(未试验)
+				 rs.addArb();  
+			9. 宕机试验
+				 将27017服务关掉,然后使用客户端连接27018,执行rs.status() 可以看到primary主服务已经切换到了27019
+				
+			
+* 分片
+	
+	单个集合数据太大时,对性能影响非常严重,使用分片,将单个集合的数据,分配到多个服务器上去,每个服务器包含这个集合的一部分.
+	
+	* 分片服务器类型
+		* 分片服务器 存放一部分文档,每个分片,可以是一台单独的服务器,也可以是副本集
+		* 查询路由器 
+			运行mongos实例,客户端请求发送到查询路由器,查询路由器将请求发送的分片服务器,然后将各个分片的响应合并成单个的响应.
+			一个分片集群可以包含多个查询路由器,提高负载均衡能力
+		* 配置服务器
+			存储分片集群的相关元数据.
+			
+	* 选择分片键
+			分片键用于确定哪些文档应被存储在哪个分片上,分片键必须是一个索引或者复合索引字段.
+		*分片键的选择:
+			* 易于分隔  分片键要容易划分成块
+			* 随机性    可以保证分片均匀,防止导致部分分片服务器负载过重
+			* 复合键    最好使用单个字段分片,但是如果不存在一个良好的单字段键,可以使用复合字段
+			* 基数      基数定义一个字段的唯一性.如果非常唯一,则高基数,反之低基数.高基数的字段适合分片.----唯一性高的适用于分片
+			* 查询定位   根据你常用的查询语句,查询字段,来确认分片键,如果一个查询,不会垮分片,那性能会好
+	* 选择一种分区方法
+			* 基于范围的分片 比如某个字段的取值范围是1-10000,可以分片为1-2500,2501-5000,5001-7500,7501-10000
+			* 基于散列的分片 平均分布,越是相近的值,越会分配到不同的分片
+			
+		  * 优缺点:基于范围的,查询性能好;基于散列的,分片分布均衡,对服务器压力比较均衡.
+			
+	* 部署一个分片集群(试验)
+		1. 创建配置服务器的数据库实例
+				通过--configsvr选项来表示这是一个配置服务器(默认端口是27019)
+				mongod --configsvr --dbpath f:/cfgdata --port 27019
+		2. 启动查询路由器的服务器(mongos)
+			  mongos的配置信息在配置服务器上,使用configdb参数,指定配置服务器,可以是多个,用逗号分隔,默认端口是27017,可以使--port修改
+			  mongos --configdb 127.0.0.1:27019
+		3. 将分片添加到集群
+				通过客户端访问mongos,然后执行sh.addShard()添加分片,分片可以是单独的mongod服务器,也可以是副本集
+				如果是单独服务器:sh.addShard('hostname:port');
+				如果是副本集:   sh.addShard('副本集名称/hostname:port');
+		4. 在数据库上启用分片
+				使用客户端连接mongos,执行sh.enableSharding(database);
+				如数据库名称是bigWords,则sh.enableSharding('bigWords');
+		5. 在集合上启用分片
+				不用对所有集合进行分片,只需对需要的集合进行分片.
+				1. 确定哪些字段将用于分片键
+				2. 使用ensureIndex()在键上建立唯一索引
+					db.myDb.myCollection.ensureIndex({_id:'hashed'})
+				3. 使用sh.shardCollection(<database>.<collection>,shard_key),启用对集合的分片,shard_key是用于创建索引的模式
+					如:sh.shardCollection('myDb.myCollection',{"_id":"hashed"});
+					
+		6. 建立分片标记范围
+				添加标签来指定分片键值的范围,确保一个特定范围的文档在同一个分片上.
+				1.建立分片标签  sh.addShardTag(shardServer,tagname)
+				2.为标签指定范围 sh.addTagRange(collection_path,startValue,endValue,tagName);
+				  可以把多个范围,指定个同一个标签
+		
+		试验算是成功,两个分片上都有数据,但是数量差距比较大,估计跟我选择的分片键有关系
+				
+			
 * gridfs store
+	* mongodb有16M大小限制,可以使用gridfs来存储超过16m的数据.
+	* gridfs把大文档拆分成块,这些块被存储在集合中,而元数据存储在另一个集合中,查询时,这些块被组装成文档.
+	* gridfs的特点是,利用跳过功能,可以从一个文档的中间读取,不用加载整个文档
+	
+	* nodejs实现grid对象
+		```
+		MongoClient.connect('mongodb://localhost/',function(err,db){
+			var grid=new Grid(db,'fs');  //fs是集合名
+		})
+		```
+		* 将数据放入网格		put(data,[options],callback);
+		put方法写入数据,这是一个针对GridFS的Buffer对象,可选的options参数,指定在哪里如何写入数据.callback第一个参数是err,第二个是grid对象的引用.
+		适用于options中的选项:
+			_id:文件的唯一id
+			root:使用的根集合名称
+			content_type:文件的mime类型
+			chunk_size:每个数据库的大小(字节)
+			metadata:一个对象,允许添加任何额外的数据
+		* 读取数据 get(id,callback);
+			id是put时options中设置的_id,callback第一个参数是err,第二个是查到的数据的Buffer对象
+		* 删除数据 delete(id,callback);
+			
+		* 示例参见: gridfs/使用基本的Grid对象在mongodb_gridfs中存储数据mongodb_grid_fs.js	
+		注:高版本的mongodb驱动不支持示例中的方法,1.4支持
+	
+	* nodejs实现GridStore对象
+		```
+		MongoClient.connect('mongodb://localhost',function(err,db){
+		  var gridStore=new GridStore(db,'word_file','w');
+		  //第一个参数是数据库,第二个参数gridfs中的文件的唯一id,第三个参数是gridstore打开的模式,对应文件打开模式
+		})
+		```
+		* 从gridstore对象读取和写入文件的方法
+		
+		方法|说明
+		:---|:---
+		Properties|包含文件的chunkSize和md5校验和
+		open(callback)|打开到gridfs数据库的连接,让你读取和写入数据库
+		writeFile(path,callback)|打开位于path的文件,并写入gridfs
+		close(callback)|把对gridstore对象的改变刷新到数据库
+		chunkCollection(callback)|从服务器检索一个块集合对象.callback函数第一个参数是err,第二个是Collection对象
+		unlink(callback)|从gridfs删除文件
+		collection(callback)|检索与gridstore关联的collection对象
+		readlines([separator],callback)|检索文件的内容,把它作为表示在文件中的行的字符串数组.separator用于指定换行符
+		rewind(callback)|在块集合中删除这个文件的所有数据块,实际是建立一个空文件
+		read([length],[buffer],callback)|从文件中读取指定长度的字节,如果没有指定length,则读整个文件,<br>buffer参数允许你传入一个Buffer对象来写入,否则,一个Buffer对象被创建.callback第二个参数作为一个buffer对象读取的字节
+		tell(callback)|检索文件当前的读写位置
+		seek([position],[location],callback)|设定文件的当前读写位置.如果没指定position,则用0,location参数用于设置搜索模式
+		eof()|如果当前位置在文件末尾,则true
+		getc(callback)|从文件的当前读/写位置获取一个字节,并将其作为第二个参数传递个回调函数
+		puts(string,callback)|将一个字符串写入文件的当前读写位置
+		stream(autoclose)|返回表示gridfs中文件的readable流对象,可以让你从数据库中流式读取.如果autoclose为true,则当到达文件结束处时,gridstore对象被关闭
+		write(data,[close],callback)|在文件当前读写位置,写入data参数,它是一个字符串.如果close为true,则写入后gridstore对象被关闭
+		
+		* gridstore类中可以的管理gridfs文件的静态方法
+		
+		方法|说明
+		:---|:---
+		GridStore.exist(db,name,[rootCollection],callback)|如果name指定的文件存在于gridfs的存储区,则回调函数的第二个参数是true.rootCollection可以指定一个备用根集合
+		GridStore.list(db,[rootCollection],callback)|回调第二个参数中返回文件名数组
+		GridStore.read(db,name,[length],[offset],[options],callback)|读取name文件的内容,作为回调的第二个参数
+		GridStore.unlink(db,names,callback)|删除names
+		
+		* 示例参见: gridfs/使用基本的GridStore对象在mongodb_gridfs中存储数据mongodb_gridstore_fs.js
+		  注:示例失败,执行报错,里面的很多方法已经作废
+		
 * mongodb修复
 * mongodb备份
