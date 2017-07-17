@@ -1904,7 +1904,7 @@ schema.pre('save',true,function(next,done){
   
 -----------
   
-下面事mongodb的一些高级应用
+42. 下面事mongodb的一些高级应用
   
 * 索引相关
 
@@ -2136,4 +2136,23 @@ schema.pre('save',true,function(next,done){
 		  注:示例失败,执行报错,里面的很多方法已经作废
 		
 * mongodb修复
+    * 从服务器端修复
+        mongod --repair --repairpath /data
+    * 从客户端修复
+        客户端 db.repairDatabase({
+            repairDatabase:1,
+            preserveClonedFilesOnFailure:<boolean>,
+            backupOriginalFiles:<boolean>
+        })
+        
+     启动修复时，数据库会被压缩，任何无效的数据都会被删除！   
 * mongodb备份
+    mongodump -h dbhost -d dbname -o dbdirectory
+    mongorestore -h dbhost -d dbname –directoryperdb dbdirectory
+    
+
+## 十一、express
+
+下面学习express相关知识
+
+41. express 基础
