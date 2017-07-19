@@ -154,7 +154,9 @@ _闭包_:变量被绑定到一个函数的作用域,但不绑定到他的父函�
 例子参见 回调链式callback_chain.js
 
 ##三、数据处理
+
 13. JSON
+
     ```
     JSON字符串转对象JSON.parse(string)
     JSON对象转字符串JSON.stringify(obj)
