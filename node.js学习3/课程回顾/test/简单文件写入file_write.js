@@ -16,4 +16,4 @@ fs.writeFile('config.txt',configTxt,options,function (err) {
     }else {
         console.log('Config 保存成功');
     }
-})
+});
