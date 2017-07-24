@@ -779,8 +779,7 @@ connected|一个布尔值，在disconnect()被调用后，它被设置为false�
     * 例子参见 子进程执行系统命令child_exec.js
               # 此例子在windows下执行中文乱码，已找到解决方法
     * 例子参见 子进程执行命令(解决乱码)clild_exec.js
-              
-    * 例子参见           
+                      
    
   - 使用execFile()在另一个进程上执行一个可执行文件
     ```
