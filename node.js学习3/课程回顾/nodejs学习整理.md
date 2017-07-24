@@ -2301,6 +2301,50 @@ query|请求的查询部分
 fresh|布尔值,当最后修改与当前匹配时，true
 stale|布尔值,当最后修改与当前匹配时，false     
 secure|布尔值，建立tls连接时，true
-acceptsCharset(charset)|如果指定的字符集受支持，则true
+acceptsCharset(charset)|如果指定的字符集受支持，则true(经测试无效)
 get(header)|返回header的值的方法
 headers|请求标头的对象形式 
+
+  * 示例参见:express学习/request对象的属性express_request.js
+  
+* response对象
+
+  * 获取/设置标头 
+  
+方法|说明
+:---|:---
+get(header)|获取
+set(header,value)|设置
+set(headerObj)|设置,headerObj包含多个kv对
+location(path)|把location标头设置为指定的path参数,可以是url路径，也可以是浏览器行为，如back
+type(type_string)|根据type_string参数设置Content Type标头,type_string可以是png/html等正常的内容类型
+attachment(filepath)|把Content-Disposition标头设置为attachment,并且指定filepath.则Content-Type头是基于文件扩展名设置的.  
+
+  * 设置状态
+```
+//默认200
+res.status(200);//正确
+res.status(300);//重定向
+res.status(400);//错误的请求
+res.status(401);//未经许可
+res.status(403);//禁止
+res.status(500);//服务器错误
+```  
+
+  * 发送响应
+  
+语法: res.send(status,[body]);  res.send([body]);  body是一个String或Buffer对象。
+一旦send()方法完成，它就设置res.finished和res.headerSent属性值.
+
+  
+  * 示例参见: express学习/response对象express_response.js
+  
+  
+  * 发送json响应
+  
+语法:res.json(status,[object]);res.json([object]);  
+    res.jsonp(status,[object]);res.jsonp([object])  
+    
+注意: 在jsonp的情况下,请求对象的url包括?callback=<method>参数;而json字符串被包装在与方法同名的函数中.
+
+  * 示例参见: express学习/从express的响应中发送json和jsonp数据express_json_jsonp.js    
