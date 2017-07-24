@@ -6,7 +6,8 @@
 var http=require('http');
 var options={
     hostname:'localhost',
-    port:3000
+    port:3000,
+    path:'/'
 }
 function handleResponse(response) {
     var serverData='';
@@ -14,10 +15,10 @@ function handleResponse(response) {
         serverData+=chunk;
     });
     response.on('end',function () {
-        //console.log('Response status: ',response.statusCode);
-        //console.log('Response Headers: ',response.headers);
-        //console.log(serverData);
-        console.log(response);
+        console.log('Response status: ',response.statusCode);
+        console.log('Response Headers: ',response.headers);
+        console.log(serverData);
+        //console.log(response);
     })
 }
 http.request(options,function (res) {

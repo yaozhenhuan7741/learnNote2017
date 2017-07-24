@@ -723,6 +723,7 @@ listen(port,[hostname],[backlog],[callback])
 
    **可以在ChildProcess对象上发出的事件**
     
+   
    事件|说明
     ---|---
     message|当ChildProcess对象调用send()方法来发送数据时发出。在这个事件上的监听器实现一个回调函数，它随后可以读出发送的数据。例如 `child.on('send',function(message){console.log(message)});`
