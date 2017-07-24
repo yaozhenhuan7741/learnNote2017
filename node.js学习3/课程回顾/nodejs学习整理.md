@@ -723,35 +723,34 @@ listen(port,[hostname],[backlog],[callback])
 
    **可以在ChildProcess对象上发出的事件**
     
-   
-   事件|说明
-    ---|---
-    message|当ChildProcess对象调用send()方法来发送数据时发出。在这个事件上的监听器实现一个回调函数，它随后可以读出发送的数据。例如 `child.on('send',function(message){console.log(message)});`
-    error|在工作进程中出现错误时发出
-    exit|在工作进程结束时发出，两个参数，code和signal,指定推出的代码，并传入信号来杀掉进程(如果它是被父进程杀掉的)
-    close|当工作进程的所有stdio流都已经终止的时候发出，它与exit不同，因为多个进程可以共享相同的stdio流
-    disconnect|当disconnect()在一个工作进程上被调用时发出
+ 事件|说明
+ ---|---
+ message|当ChildProcess对象调用send()方法来发送数据时发出。在这个事件上的监听器实现一个回调函数，它随后可以读出发送的数据。例如 `child.on('send',function(message){console.log(message)});`
+ error|在工作进程中出现错误时发出
+ exit|在工作进程结束时发出，两个参数，code和signal,指定推出的代码，并传入信号来杀掉进程(如果它是被父进程杀掉的)
+ close|当工作进程的所有stdio流都已经终止的时候发出，它与exit不同，因为多个进程可以共享相同的stdio流
+ disconnect|当disconnect()在一个工作进程上被调用时发出
     
    **可以在ClildProcess对象上调用的方法**
     
    
-   方法|说明
-    ---|---
-    kill([signal])|导致操作系统发送一个kill信号给子进程，默认的信号是SIGTERM
-    send(message,[sendHandle])|将消息发送到句柄。该消息可以是字符串或者对象。可以的sendHandle参数让你可以把tcpsever或socket对象发送到客户端。这允许客户端进程共享相同的端口和地址。
-    disconnect()|关闭父进程与子进程之间的进程间通信（或ipc)通道，并把父进程和子进程的连接标志都设置为false
+方法|说明
+---|---
+kill([signal])|导致操作系统发送一个kill信号给子进程，默认的信号是SIGTERM
+send(message,[sendHandle])|将消息发送到句柄。该消息可以是字符串或者对象。可以的sendHandle参数让你可以把tcpsever或socket对象发送到客户端。这允许客户端进程共享相同的端口和地址。
+disconnect()|关闭父进程与子进程之间的进程间通信（或ipc)通道，并把父进程和子进程的连接标志都设置为false
     
-   示例：`clild.send({cmd:'command data'})`
+  * 示例：`clild.send({cmd:'command data'})`
     
    **可以在ChildProcess对象上访问的属性**
     
-   属性|说明
-    ---|---
-    stdin|输入writable流
-    stdout|标准输出readable流
-    stderr|用于输出错误的标准输出readable流
-    pid|进程的id
-    connected|一个布尔值，在disconnect()被调用后，它被设置为false。当它为false时，你再也不能将消息发送给子进程
+属性|说明
+---|---
+stdin|输入writable流
+stdout|标准输出readable流
+stderr|用于输出错误的标准输出readable流
+pid|进程的id
+connected|一个布尔值，在disconnect()被调用后，它被设置为false。当它为false时，你再也不能将消息发送给子进程
     
   
   - 使用exec()在另一个进程上执行一个系统命令
