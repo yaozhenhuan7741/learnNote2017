@@ -734,6 +734,7 @@ listen(port,[hostname],[backlog],[callback])
     
    **可以在ClildProcess对象上调用的方法**
     
+   
    方法|说明
     ---|---
     kill([signal])|导致操作系统发送一个kill信号给子进程，默认的信号是SIGTERM
