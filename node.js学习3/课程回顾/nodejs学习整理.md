@@ -1730,7 +1730,7 @@ partial|如果true,则表示对分片系统间共享的数据进行查询时,游
   
   方法|说明
   :---|:---
-  create(obj,[callback])|插入数据库，obj是一个JavaScript对象或者对象数组；回掉函数第一个参数时err，被保存的文档是其他参数，如function(err,doc1,doc2...)
+  create(obj,[callback])|插入数据库，obj是一个JavaScript对象或者对象数组；回调函数第一个参数时err，被保存的文档是其他参数，如function(err,doc1,doc2...)
   count([query],[callback])|返回匹配的项数
   distinct([query],[field],[callback])|返回数组
   find([query],[options],[callback])|返回匹配的文档对象的数组
@@ -2158,4 +2158,149 @@ schema.pre('save',true,function(next,done){
 
 下面学习express相关知识
 
+express是一个web框架，可以直接使用express模块，也可以使用express命令生成模板。<br>
+下面的学习，先学习直接使用express模块，便于深入理解express的工作原理。
+
 41. express 基础
+
+
+* express模块安装
+```
+  npm install express -g 
+  npm install express-generator  -g  //安装express命令
+```
+
+* 创建express实例
+```
+    var express=require('express');
+    var app=express();
+```
+
+* express参数设置 set/get enable/disable
+
+如：设置视图引擎<br>
+```
+app.set('view engine','jade');
+
+```
+
+  * express应用参数设置
+
+设置|说明
+:---|:---
+env|定义环境模式字符串，如development(开发）,testing(测试),production(生产).默认值是process.env.NODE_ENV
+trust proxy|启用/禁用反向代理的支持。默认是禁用
+jsonp callback name|定义jsonp请求的默认回调名称，默认是?callback=
+json replacer|定义json replacer回调函数，默认null
+json spaces|指定当格式化json响应时使用的空格数量，默认，开发时是2，生产时是0.
+case sensitive routing|启用/禁用区分大小写,默认禁用
+strict routing|启用/禁用严格路由，如末尾是否有/，默认禁用
+view engine|指定模板引擎。指定呈现模板时，如果从视图中省略了文件扩展名，则使用默认模板引擎扩展.
+views|指定模板引擎用来查找视图模板的路径，默认是./views
+
+* 启动express服务器
+
+```
+var express=require('express');
+var app=express();
+app.listen(3000);
+//express()的返回值app,实际上是一个回调函数，它映射了http.createServer()和https.createServer()的回调函数
+```
+
+  * 示例参见: express学习/用express实现http和https服务器express_http_https.js
+  
+* 配置路由  
+
+  * 语法: app.<method>(path,[middleware...],callback);
+  
+  <method>指的是http请求方法，比如get和post。
+  path是URL的路径部分。 
+  middleware参数是回调函数执行前要应用的中间件函数。
+  callback参数是客户端请求request和服务器端响应response.
+  
+  特殊：app.all(),如：
+```
+app.all('*',function(req,res){
+    //全部路径的全局处理程序，比如记录日志等
+})
+```
+
+* 路由参数
+
+实现路由参数的几种方法:
+
+  * 查询字符串: ?key=value&key2=value2... 这是最常用的方法，但是会使URL变得冗长
+  * post参数:  通过post参数传递
+  * 正则:      可以定义一个正则表达式作为路由的路径部分。
+  * 定义的参数: 可以在路径部分使用:<parm_name>按名称定义一个参数。  
+  
+  
+* 示例：
+  * 使用查询字符串应用路由参数
+```
+var express=require('express');
+var app=express();
+var url=require('url');
+
+app.get('/find',function(req,res){
+    var url_parts=url.parse(req.url,true);
+    var query=url_parts.query;
+    res.send('Find Book:Author:' + query.author + ' title: '+query.title);
+}); 
+
+//如： /find?author=malei&title=nodejs
+```   
+  * 使用正则表达式应用路由参数
+```
+app.get(/^\/book\/(\w+)\:(\w+)?$/,function(req,res){
+    
+    console.log(req.params);
+    //匹配的多个参数，可以用req.params[0],req.params[1]...
+    
+    //如：/book/12:10
+})
+```  
+  * 使用已定义的参数来应用路由参数
+```
+app.get('/user/:userid',function(req,res){
+    console.log(userid);
+    //如: /user/3332
+})
+```  
+  * 为已定义的参数应用回调函数
+  
+如果定义的参数在url中，可以指定被执行的回调函数。该回调函数在路由的处理程序之前执行。并且可以为一个路由注册多个回调函数.
+
+注册回调函数，使用app.param()方法，第一个参数是已定义的那个参数，第二个参数是它的回调，参数是req,res,next,value.
+
+next参数是一个用于已注册的下一个app.param()。value是从URL中解析的参数的值
+
+```
+app.param('userid',function(req,res,next,value){
+    console.log('request with userid:'+value);
+    next();
+})
+```
+
+  * 示例参见: express学习/路由参数express_routes.js
+  
+ 
+* request对象
+
+    request对象常用属性和方法
+    
+属性或方法|说明
+:---|:---
+originalUrl|请求的原始字符串
+protocol|协议字符串
+ip|请求的ip地址
+path|请求的路径部分
+host|请求的主机名
+method|请求的方法
+query|请求的查询部分
+fresh|布尔值,当最后修改与当前匹配时，true
+stale|布尔值,当最后修改与当前匹配时，false     
+secure|布尔值，建立tls连接时，true
+acceptsCharset(charset)|如果指定的字符集受支持，则true
+get(header)|返回header的值的方法
+headers|请求标头的对象形式 
