@@ -2348,3 +2348,27 @@ res.status(500);//服务器错误
 注意: 在jsonp的情况下,请求对象的url包括?callback=<method>参数;而json字符串被包装在与方法同名的函数中.
 
   * 示例参见: express学习/从express的响应中发送json和jsonp数据express_json_jsonp.js    
+  
+  
+  * 发送文件 
+  
+语法: res.sendfile(path,[options],[callback])
+path是要发送的文件，options是一个对象，包含maxAge属性定义的最长期限的内容和root属性（指定根路径，path是相对于这个路径的相对路径）。传输完成时，执行回调，参数是err.
+sendfile()方法执行以下操作：a. 基于文件扩展名设置Content-Type标头 b.设置其它相应的标头，如内容长度 c.设置响应状态 d.使用response对象内部的连接，将文件发送到客户端。
+
+  * 示例参见:express学习/从express发送文件express_sendfile.js
+  
+  * 发送下载响应
+  
+语法：res.download(path,[filename],[callback])
+path是要发送的文件，filename参数可以指定一个应该在Content-Disposition标头中发送的不同的文件名。下载完成后执行回调。download方法将文件作为http响应的附件发送。----经过试验，使用sendfile，会把图像显示在浏览器上，使用download，会弹出一下下载框，并且文件名是filename.
+
+  * 重定向响应
+  
+语法： res.redirect(path);  
+path是url。即直接打开path页面。这个非常常用，比如一个post登录请求，成功后，应跳转到首页等等。
+
+  * 示例参见: express学习/express重定向express_redirect.js 
+  
+
+* 实现一个模板引擎   
