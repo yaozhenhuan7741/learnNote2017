@@ -2572,7 +2572,11 @@ cookie|指定把会话链接到浏览器的cookie对象
 	* 示例参见: express学习/express自定义中间件express_middleware.js
 	
 
-## 十二、angularjs	
+## 十二、 补充学习jade
+	
+学习笔记 见 [jade学习笔记]('../jade学习/jade学习整理.md')
+
+## 十三、angularjs	
 
 下面学习angularjs相关知识，结合其他教学视频学习
 	
