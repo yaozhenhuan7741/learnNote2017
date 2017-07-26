@@ -2370,6 +2370,18 @@ path是url。即直接打开path页面。这个非常常用，比如一个post�
 
   * 示例参见: express学习/express重定向express_redirect.js 
   
+  * 整理
+    * res.send()
+    * res.json()
+    * res.jsonp()
+    * res.sendfile()
+    * res.download()
+    * res.redirect()
+    * res.render()
+    * res.status()
+    * res.type()
+    * res.end()
+  
 
 * 实现一个模板引擎   
 
@@ -2415,3 +2427,152 @@ path是url。即直接打开path页面。这个非常常用，比如一个post�
 注： ejs和pug教程需要进一步学习，暂时不作为重点
 
 ----
+
+42. express中间件
+
+中间件函数在收到请求和发送响应之间执行。express建立在connect NPM模块之上。
+
+* express支持的中间件组件(常用)
+	* static 允许express服务器以流式处理静态文件的get请求。express内置，通过express.static()访问。
+	* express-logger 实现一个格式化的请求记录器来跟踪对服务器的请求
+	* basic-auth-connect 提供对基本的http身份验证的支持
+	* cookie-parser 可以从请求读取cookie并在响应中设置cookie
+	* cookie-session 提供基于cookie的会话支持
+	* express-session 提供了一个强大的会话实现
+	* body-parser 把post请求正文中的json数据解析为req.body属性
+	* compression 对发送给客户端的大响应提供gzip压缩支持
+	* csurf 提供跨站点请求伪造保护
+	
+* 常用中间件模块安装
+	```
+	npm install basic-auth-connect
+	npm install body-parser
+	npm install cookie-parser
+	npm install cookie-session
+	npm install express-session
+	```	
+
+* 在全局范围内把中间件分配给某个路径
+
+语法： use([path],middleware);
+path变量可选，默认为/，表示所有路径。middleware参数是一个函数，他的语法是 function(req,res,next); req是请求，res是响应，next是下一个要执行的中间件函数。
+每个中间件组件都有一个构造函数，它返回相应的中间件功能。如：
+```
+var express=require('express');
+var bodyParser=require('body-parser');
+var app=express();
+app.use('/',bodyParser());
+```
+
+* 把中间件分配到单个路由
+
+将中间件函数，添加到路由中即可。如
+```
+app.get('/somepath',mideleware,function(req,res) {
+  xxx;
+});
+//举例
+app.get('/find',bodyParser(),function(req,res) {
+  
+})
+```
+
+* 添加多个中间件函数
+
+注：添加的顺序，就是被执行的顺序!!!
+
+app.use('/',middleware1).use('/',middleware2).user('/',middleware3);
+等价于
+app.use('/',middleware1);
+app.use('/',middelware2);
+app.use('/',middelware3);
+
+----
+下面是一些常用中间件的使用方法，可以帮助深入理解express工作原理
+
+* query中间件(express4.x内置)
+
+query中间件将一个查询字符串从url转换为JavaScript对象，并保存为req.query对象。
+
+* 提供静态文件服务
+
+语法: express.static(path,[options]);
+path参数 指定静态文件的默认路径。
+options参数 允许设置以下属性： 
+	maxAge 浏览器缓存最长保存时间，单位毫秒，默认0；
+	hidden,布尔值，如果true，表示启用隐藏文件传输功能，默认false
+	redirect,布尔值，如果true，表示如果请求的是一个目录，则该请求被重定向到有一个/结尾的路径，默认true.----如果是路径，补全末尾的/
+	index，根路径的默认文件名，默认index.html
+	
+	* 示例参见： express学习/静态路由express_static.js  express学习/static/index.html 以及 images/图片
+	
+* 处理post正文数据(body-parser)
+
+	* 示例参见: express学习/body-parser处理post参数express_body_parser_post.js
+	
+* 发送和接收cookie (cookie-parser)	
+
+cookie-parser中间件从一个请求解析cookie，并将它们作为一个JavaScript对象存储在req.cookies中。--req.cookies 复数
+语法: express.cookie-parser([secret]);  secret可选，用来在cookie内部签署防止cookie的篡改
+在响应中设置cookie的方法: res.cookie(name,valeu,[options]);                           --res.cookie 单数
+	options参数:
+		maxAge:单位毫秒，表示cookie生存时间
+		httpOnly:布尔值，如果true,表示这个cookie只能由服务器访问，而不能通过客户端的JavaScript访问
+		signed: 布尔值，如果true，表示该cookie将被签署，需要使用req.signedCookie对象，而不是req.cookie来访问它。
+		path:该cookie应用的路径。
+		
+删除cookie的方法: res.clearCookie('name');		
+
+	* 示例参见: express学习/express发送和接收cookie_express_cookies.js
+	
+* 实现会话(cookie-session)
+
+基本的、简单的会话支持，可以使用cookie-session中间件.
+cookie-session会话中间件，在底层利用cookie-parser中间件，所以需要先添加cookie-parser，后添加cookie-session.
+添加cookie-session：语法:app.use(require('cookie-session')([options]))   --教程中不知道是不是有错误，这个是我的理解
+	options参数可以设置cookie的以下属性:
+		key:用于标识会话的cookie名称
+		secret:用来签署会话cookie的字符串，防止被篡改
+		cookie:对象，定义了cookie的设置，包括maxAge,path,httpOnly,signed。默认{path:'/',httpOnly:true,maxAge:null}
+		proxy:布尔值，如果true，则express信任反向代理
+cookie-session被实现时，会话被存储为req.session对象。
+
+	* 示例参见: express学习/express实现一个基本的cookie会话express_session.js		
+	
+* 基本的http身份验证(basic-auth-connect)	
+
+使用http的authorization标头从浏览器向服务器发送编码后的用户名和密码，如果在浏览器中没有存储url的授权信息，浏览器会启动一个基本的登录框. 缺点是，只要一次登录成功，以后就不用登了...
+
+语法: var basicAuth=require('basic-auth-connect'); express.basicAuth(function(user,pass){ });
+
+  * 示例参见: express学习/全局范围内实现基本的http身份验证express_auth.js
+  * 示例参见: express学习/单独路由实现基本的http身份验证express_auth_one.js
+
+
+* 实现会话身份验证	(express-session)
+	
+将身份验证存储在一个可以随意使之过期的会话中，更安全.
+express-session中间件，附加一个session对象到req上，来提供会话功能。
+可以在req.session对象上调用的方法:
+
+方法|说明
+:---|:---
+regenerate([callback])|移除并创建一个新的req.session对象，用于重置会话
+destroy([callback])|移除req.session对象
+save([callback])|保存会话数据
+touch([callback])|用于重置cookie的maxAge计数
+cookie|指定把会话链接到浏览器的cookie对象
+
+  * 示例参见: express学习/express中实现会话验证express_auth_session.js
+  
+* 自定义中间件  
+
+语法: function(req,res,next){xx;xx;next()};
+
+	* 示例参见: express学习/express自定义中间件express_middleware.js
+	
+
+## 十二、angularjs	
+
+下面学习angularjs相关知识，结合其他教学视频学习
+	
