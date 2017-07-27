@@ -155,5 +155,36 @@ jade学习整理
 	
 	注:mixin之间可以嵌套
 	
-* 模板继承	
+* 模板继承和包含
+
+	* 继承 block extend  父子关系
+	语法:
+	```
+	block 名称  定义一个块
+	如:
+		//定义
+		block desc
+			p 这是一个代码块
+			
+		//使用
+		block desc
+		
+		继承extends 文件名
+		  然后会将block 名称 替换为它定义的代码块
+		  
+		注意:经测试，block 名称，不能在同一个文件中调用  
+		
+			
+	
+	```
+	示例参见  layout.pug 继承.pug
+	
+	* 包含 include 文件名 区块内嵌
+	
+		注：试验失败，报错  head.pug 包含.pug
+		
+* 过滤器? 可以嵌入其他语言 比如markdown 语法是 :语言标记 后边跟其他语言的代码
+	
+	示例 包含markdown.pug		
+	
 		
