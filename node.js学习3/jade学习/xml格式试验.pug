@@ -1,0 +1,33 @@
+doctype xml
+CONFIG
+	WEBSRV
+		IP 127.0.0.1
+		TIMSPORT 8199
+		WEBURL http://127.0.0.1:8199/TIMS-Server/services/ContentInfoService
+		CMPORT 28390
+		JQWEBURL http://127.0.0.1:9800/dna_ws/ReceivebillImageState?wsdl
+		JQOCRURL http://127.0.0.1:9800/dna_ws/SynInvoiceInfoWebServiceImpl?wsdl
+		SAVEOCR 2
+	IMAGE_PROCESS
+		//图像压缩
+		COMPRESS 1
+		//压缩率
+		COMPRESS_RATIO 80
+		SUB_BLACK 1
+		TURN_CORRECT 1
+		RECOGNIZE_OCR 0
+		UPPERTOLOWERCASE 0
+		OTHER_FILE_FORMAT 0
+		COMBINE 0
+		COMBINEDIRECTION 0
+		DOC_DIRECT_TURN_CORRECT 1
+		FILE_ENCRYPT 0
+		MULTI_LABEL 0
+		EXPORT_IMAGE 0
+		INTEGRATE_STYLE OEM
+	SCANNER
+		PhoneScanner 1
+		appScanTimeOut 111
+		appRegisterTimeOut 0
+
+

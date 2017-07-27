@@ -2,9 +2,18 @@ doctype html
 html(lang='en')
 	head
 		title jade学习
-		meta(http-equiv='Content-Type',content='text/html;charset=utf-8')
+		meta(charset="utf-8")
+		- var name='malei'
+		- var htmlData='<script>alert(1);</script>'
 	body
 		h1#title.mtitle jade学习
+		h2 使用变量
+		h2 欢迎你 #{name.toUpperCase()}
+		h2=name
+		h2 #{htmlData}
+		h2=htmlData
+		h2 !{htmlData}
+		h2!=htmlData
 		p
 			|1.起因
 			|2.经过
@@ -18,3 +27,42 @@ html(lang='en')
 			| 这是第二个段内
 			strong 增强
 			|的试验
+		h2 单行注释
+		// h2 这是一个单行注释，会显示在html里
+		h2 非缓冲注释
+		//- 这是一个非缓冲注释，不会显示到html里
+		h2 块注释
+		//-
+			p.
+				1.起因
+				2.经过
+
+		h2 流程控制
+		- var datas={name:'node',level:'high'}
+		- var users=['张三','李四','王五']
+		- var departs=[{id:0,name:'总公司',childs:['财务','行政','人事']},{id:1,name:'北分',childs:['财务','行政','市场','项目']}]
+		- for (var i in datas)
+			p=datas[i]
+		each value, key in datas
+			p #{key}: #{value}
+		ul
+			- for ( var i in users)
+				li=users[i]
+		ul
+			each val,idx in users
+				li #{idx}： #{val}
+			each val in users
+				li  #{val}
+
+		ul
+			each depart in departs
+				li #{depart.name}
+				li
+					ul
+						each child in depart.childs
+							li #{child}
+
+		- var n=0
+		ul
+			while n<6
+				li= n++
