@@ -69,7 +69,7 @@ jade学习整理
 		注意：页面声明的变量优先级高，当变量同名时，使用的是页面上的
 		
 	* 流程代码
-		* for each while if else
+		* 循环 for each while  
 		```
 		- var datas={name:'node',level:'high'}
 		- for (var k in datas)
@@ -82,4 +82,78 @@ jade学习整理
 		 while n<4   //也没有-
 		  li=n++
 		
-		```	
+		```
+		* 条件判断 (if else) ( unless else) (case when default)
+		
+			注: unless 条件为假 它下边的才会执行 与if相反
+			
+* 神奇的mixin	(代码重用/复用，内联代码块 )
+			
+	语法:
+	```
+	//先定义
+	mixin 名称1  //不带参数
+		操作	
+	
+	mixin 名称2(参数1，参数2)  //带参数
+	  操作		
+		
+	//使用
+	+名称1
+	+名称2(参数1，参数2)	
+	
+	//代码嵌套
+	mixin 名称3
+		操作
+		+名称1
+		操作
+		+名称2(参数，参数)
+		
+	//内联代码块
+	在使用mixin时，如果它下面有代码，会被它解析成block变量
+	如:
+		定义
+		mixin 名称4
+			p hello
+			if block  //这里的block，是调用名称4时，它下面的代码
+				block	
+		使用
+		+名称4
+			p 我是名称4下面的代码，我被名称4解释为block 
+		
+	//改属性		方法1	需要每个属性都设置一下
+	//attributes是属性对象
+	如:
+		定义
+		mixin 名称5(参数)  //这里的参数不是属性哦！
+			p(class!=attributes.class) #{参数}
+			
+		使用
+		+名称5(参数)(属性=值)
+		+名称5(参数)(class='col-sm-4')
+											
+		attributes.class的值是col-sm-4，注意mixin中的!=防止转义
+	//改属性 方法2  可以整体的属性设置
+	//使用&attributes()
+	如:
+		定义
+		mixin 名称6(参数)
+			p&attributes(attributes) #{name}
+		使用
+		+名称6（参数）(属性=值)	
+		
+	//参数个数不确定时	 参数使用 ...参数名 三个点加参数名 然后 遍历这个参数名
+	如:
+		mixin show(...lessons)
+			ul
+				each lesson in lessons
+					li #{lesson}
+	
+	
+	```
+	示例参见 mixin试验.pug
+	
+	注:mixin之间可以嵌套
+	
+* 模板继承	
+		

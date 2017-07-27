@@ -66,3 +66,35 @@ html(lang='en')
 		ul
 			while n<6
 				li= n++
+
+		- var isEdit=true
+		- var lessons=['nodejs','jade','ejs','mongodb']
+		if lessons
+			if lessons.length > 3
+				ul
+					each lesson in lessons
+						li 课程 #{lesson}
+			else if lessons.length >= 1
+				p #{lessons}
+			else
+				p no lessons
+		else
+			p 没有课程
+
+		unless isEdit
+			p 假的
+		else
+			p 真的
+		- var name='jade'
+		case name
+			when 'java'
+				p hi java
+			when 'node'
+				p hi node
+			default
+				p hi #{name}
+
+		while lessons.length>0
+			p hello2 #{lessons[0]}
+			- lessons.shift()
+
