@@ -6,6 +6,8 @@ jade学习整理
 安装好jade/pug之后，可以找到jade.cmd/pug.cmd （可能需要安装pug-cli）
 该命令可以将jade/pug格式的文档，编译成相应的格式，比如html，xml等
 
+如: pug.cmd  -P -w xxx.pug
+
 * 基本语法
 	* 缩进2个空格
 	* doctype 定义文档类型，比如html/xml等等，也支持html老版本的格式
@@ -181,10 +183,26 @@ jade学习整理
 	
 	* 包含 include 文件名 区块内嵌
 	
-		注：试验失败，报错  head.pug 包含.pug
+		示例： 包含.pug head.pug list.pug
 		
 * 过滤器? 可以嵌入其他语言 比如markdown 语法是 :语言标记 后边跟其他语言的代码
-	
+
+	注：包含markdown需要安装jstransformer-markdown-it插件
+	如:
+		npm install jstransformer-markdown-it --save
+	引入时，使用 :markdown-it	
+
 	示例 包含markdown.pug		
+	
+* 工具html2jade
+
+npm install html2jade -g
+
+命令: html2jade  xxxx >  xxx.pug
+
+参考 https://github.com/donpark/html2jade
+
+
+	
 	
 		
