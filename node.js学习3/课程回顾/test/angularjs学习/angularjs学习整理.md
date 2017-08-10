@@ -54,7 +54,7 @@ isUndefined()|是否是没定义
 lowercase(string)|转小写
 uppercase(string)|转大写
 
-	使用方法  angular.xxx; 如: angular.forEach();
+	使用方法  angular.xxx; 如: angular.forEach(data,function(item){});   //这个等价于 data.forEach(function(item){})
 
 	简单示例:  node_server.js  first.js first.html
 
@@ -124,7 +124,122 @@ angularjs模块被实现为两个阶段:配置阶段和运行阶段
 
 		
 
+* $watch
 
+	待试验
+	
+* ng-class=
+	
+	待试验
+	
+	ng-class="{classname:true}"
+	
+* ng-click
+
+	待试验
+	
+* ng-repeat	
+	
+	待试验
+	
+	$index 可以获取索引,即ng-repeat时数组的索引,但是,如果配合使用过滤器,$index会跟item不一致,谨慎使用
 			
+* angular.module('name',[,requires],[configFn])
 	
+	模块 一个页面只能有一个module,可以有多个控制器
+	作用域  控制器
 	
+	configFn   angular.config()
+	
+* $provider  
+	
+* factory
+	
+	可以返回任何类型的数据
+	$provider.factory('name',function(){})
+	module.factory('name',function(){})
+	
+* service
+	
+	返回的必须是对象
+	$provider.service()
+	module.service()
+	
+* 使用factory和service共享数据	
+
+* 过滤器
+
+	{{ expression|filter}}
+	{{ expression|filter1|filter2}}
+	{{ expression|filter1:param1,param2... }}
+
+* 常用过滤器
+
+	* number
+		不加参数,会为数字加上逗号 如:10000 10,000
+		加参数number:3  保留3位小数
+	* currency
+		不加参数,会为数字加上$美元符号
+		待参数,可以自定义货币符号 currency:'RMB'    100|currency:'RMB'   RMB100
+	* date
+		不带参数
+		带参数   如: date:'short' date:'y'
+			medium
+			short
+			fullDate
+			longDate
+			mediumDate
+			shortDate
+			mediumTime
+			shortTime
+			y
+			yy
+			yyyy
+			M
+			d
+			m
+			s
+			..
+	* lowercase
+  * uppercase
+	* json
+	* limitTo
+		limitTo:5
+		limitTo:-5
+	* orderBy
+		orderBy:'name'
+		orderBy:'-name'
+	* filter
+		filter:'a'   //只过滤值中包含'a'的, 如{name:'malei'}
+		filter:{name:'a'}  //只过滤name属性的值包含a的
+		filter:functionName  //使用自定义的函数来过滤,符合条件的返回true
+		
+		$filter注入
+		```
+		controller('name',function($scope,$filter){
+			var num=$filter('number')(3000);   //num=3,000  $filter(过滤器名称)(参数1)(参数二)
+			
+			var jsonString=$filter('json')(myObj);  //jsonString 是非常便于查看的json字符串
+		})
+		```
+* 自定义过滤器
+		
+		$filterProvider.register(自定义过滤器名称,function(
+				return function(){}  //返回的必须是个函数
+		){});
+		
+		module.filter()
+		
+		使用:  {{ expression|自定义过滤器名称 }}
+		
+
+* 购物车试验
+
+	1. 通过ng-repeat遍历
+	2. 模糊搜索
+	3. 排序
+	4. 总金额/总数量计算
+	5. 商品移除
+	6. 商品数量增加减少
+	7. 清空购物车--显示相应信息
+		
