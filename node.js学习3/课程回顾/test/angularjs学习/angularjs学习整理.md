@@ -2,7 +2,10 @@
 
 ### 版本选择
 
-	angularjs 1.x 和 2.x 差距很大，但是目前2.x还不稳定，这里学习以1.3版为基础版本，1.3之后不再支持ie8
+	angularjs 1.x 和 2.x 差距很大，但是目前2.x还不稳定，这里学习以1.3版为基础版本
+	
+	1.2之后不再支持ie8,如果遇到需要兼容ie8的情况，使用1.2即可
+	
 	
 #### angularjs基础
 
@@ -121,38 +124,59 @@ angularjs模块被实现为两个阶段:配置阶段和运行阶段
 		手动触发脏检查
 			$apply会通过$digest去触发脏检查，如果不给它参数，它会检查$scope里所有监听的属性，建议给参数，要不然会影响性能    $scope.$apply()	
 		
-
+		$scope.$apply(function (){})
+		示例参见:  static/脏检查之apply.html
 		
 
 * $watch
 
-	待试验
+	观察某变量，如果被观察的value与上次不一样，机会被触发
+	$wathc(watchFn,watchAction,deepWatch)
+	watchFn:  angular表达式或函数的字符串
+	watchAction(newValue,oldValue,scope)  当watchFn发生变化时调用
+	deepWatch： 默认false,如果想要监控对象的每个属性，则设置为true----指针类型的，某个属性变化时，这个指针是没有变化的，如果设置成true，就能监测到了
+	
+	例如，监测密码输入，密码改变一次，就记录一次次数，如果次数大于某个值，就不允许尝试了。
+	示例参见：static/监测之watch.html
+	
+* ng-init
+
+  ng-init="count=0";
 	
 * ng-class=
 	
-	待试验
-	
 	ng-class="{classname:true}"
+	试验间购物车试验
 	
 * ng-click
 
-	待试验
+	ng-click="xxx"   xxx可以是控制器中定义的函数，也可以是表达式，比如  ng-click="cart.length=0"
 	
 * ng-repeat	
-	
-	待试验
 	
 	$index 可以获取索引,即ng-repeat时数组的索引,但是,如果配合使用过滤器,$index会跟item不一致,谨慎使用
 			
 * angular.module('name',[,requires],[configFn])
 	
-	模块 一个页面只能有一个module,可以有多个控制器
+	模块 一个页面只能有一个module,可以有多个控制器，其他模块，可以通过依赖注入的方式被使用
 	作用域  控制器
 	
 	configFn   angular.config()
 	
-* $provider  
+	多种使用方法，可以将控制器、工厂、服务等等，写到configFn中，也可以是使用module.xxx等便捷方法
+	var myapp=angular.module('myApp',[]);
+	myapp.controller();
 	
+	等同于：
+	angular.module('myApp',[])
+	.controller()
+	
+	即：可以通过 . 来连接
+	
+* $provider  
+
+	angular使用$provider对象来实现自动依赖注入机制，注入机制通过调用一个provider的$get方法--这个是底层实现，我们一般直接使用便捷方法
+			
 * factory
 	
 	可以返回任何类型的数据
@@ -166,6 +190,8 @@ angularjs模块被实现为两个阶段:配置阶段和运行阶段
 	module.service()
 	
 * 使用factory和service共享数据	
+
+	工厂、服务等，示例参见：  static/工厂服务和多控制器数据共享试验.html
 
 * 过滤器
 

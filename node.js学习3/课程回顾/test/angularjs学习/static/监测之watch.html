@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>angularjs 学习</title>
+</head>
+<body ng-app>
+<div ng-controller="myCtrl">
+   
+	<div>
+		<input type="text" ng-model="password" >
+		密码修改次数:{{ count }}
+		<span ng-show="count-3" ng-bind="message"></span>
+		
+	</div>
+	<div>
+		<input type="text" ng-model="data.name" >
+		<br>
+		deepWatch为默认值false，无法监测到对象类型的某个属性的变化<br>
+		<span ng-bind="newValue"></span>
+		<span ng-bind="oldValue"></span>
+		<br>
+		deepWatch为true，可以监测到对象类型的某个属性的变化<br>
+		<span ng-bind="newValue2"></span>
+		<span ng-bind="oldValue2"></span>
+	</div>
+	<div ng-init="hehe='123123'">
+		<span >{{ hehe }}</span>
+	</div>
+</div>
+
+<script type="text/javascript" src="js/angular.min.1.3.js"></script>
+<script>
+    function myCtrl($scope) {
+		$scope.password="123123";  //普通类型的
+		$scope.count=0;
+		$scope.$watch('password',function(newValue,oldValue){
+			//console.log('new:'+newValue);
+			//console.log('old:'+oldValue);
+			++$scope.count;
+			if($scope.count > 3){
+				$scope.message="密码修改次数大于3次啦！"
+			}
+		});
+		
+		$scope.data={    //对象  指针类型的
+			name:"张三"
+		}
+		
+		$scope.$watch('data',function(newV,oldV){
+			$scope.newValue=newV.name;
+			$scope.oldValue=oldV.name;
+		})
+		
+		$scope.$watch('data',function(newV,oldV){
+			$scope.newValue2=newV.name;
+			$scope.oldValue2=oldV.name;
+		},true)
+
+    }
+
+</script>
+</body>
+</html>
