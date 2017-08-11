@@ -173,9 +173,10 @@ angularjs模块被实现为两个阶段:配置阶段和运行阶段
 	
 	即：可以通过 . 来连接
 	
-* $provider  
+* $provide  
 
-	angular使用$provider对象来实现自动依赖注入机制，注入机制通过调用一个provider的$get方法--这个是底层实现，我们一般直接使用便捷方法
+	angular使用$provide对象来实现自动依赖注入机制，注入机制通过调用一个provider的$get方法--这个是底层实现，我们一般直接使用便捷方法
+	$provide.provider
 			
 * factory
 	
