@@ -153,6 +153,13 @@ angularjs模块被实现为两个阶段:配置阶段和运行阶段
 	ng-click="xxx"   xxx可以是控制器中定义的函数，也可以是表达式，比如  ng-click="cart.length=0"
 	
 * ng-repeat	
+
+	ng-repeat="expression"  
+	expression可以是:
+		x in data
+		{k,v} in myobj
+		
+	
 	
 	$index 可以获取索引,即ng-repeat时数组的索引,但是,如果配合使用过滤器,$index会跟item不一致,谨慎使用
 			
@@ -198,7 +205,7 @@ angularjs模块被实现为两个阶段:配置阶段和运行阶段
 
 	{{ expression|filter}}
 	{{ expression|filter1|filter2}}
-	{{ expression|filter1:param1,param2... }}
+	{{ expression|filter1:param1:param2... }}
 
 * 常用过滤器
 
@@ -209,24 +216,69 @@ angularjs模块被实现为两个阶段:配置阶段和运行阶段
 		不加参数,会为数字加上$美元符号
 		待参数,可以自定义货币符号 currency:'RMB'    100|currency:'RMB'   RMB100
 	* date
-		不带参数
+		
+		date 过滤器可以将日期格式化成需要的格式。AngularJS中内置了几种日期格式，如果没有指定使用任何格式，默认会采用 mediumDate 格式，下面的例子中展示了这个格式。
 		带参数   如: date:'short' date:'y'
-			medium
-			short
-			fullDate
-			longDate
-			mediumDate
-			shortDate
-			mediumTime
-			shortTime
-			y
-			yy
-			yyyy
-			M
-			d
-			m
-			s
-			..
+		        date:'yyyy-MM-dd hh:mm:ss'
+
+		```
+			·下面是内置的支持本地化的日期格式：
+      　　{{ today | date:'medium' }} <!-- Aug 09, 2016 12:09:02 PM -->
+      　　{{ today | date:'short' }} <!-- 11/11/1612:09PM -->
+      　　{{ today | date:'fullDate' }} <!-- Thursday, August 09, 2016 -->
+      　　{{ today | date:'longDate' }} <!-- August 09, 2016 -->
+      　　{{ today | date:'mediumDate' }}<!-- Aug 09, 2016 -->
+      　　{{ today | date:'shortDate' }} <!-- 8/9/16 -->
+      　　{{ today | date:'mediumTime' }}<!-- 12:10:12 PM -->
+      　　{{ today | date:'shortTime' }} <!-- 12:09 PM -->
+      
+      ·年份格式化
+      　　四位年份：{{ today | date:'yyyy' }} <!-- 2016 -->
+      　　两位年份：{{ today | date:'yy' }} <!-- 13 -->
+      　　一位年份：{{ today | date:'y' }} <!-- 2016 -->
+      
+      ·月份格式化
+      　　英文月份：{{ today | date:'MMMM' }} <!-- August -->
+      　　英文月份简写：{{ today | date:'MMM' }} <!-- Aug -->
+      　　数字月份：{{ today |date:'MM' }} <!-- 08 -->
+      　　一年中的第几个月份：{{ today |date:'M' }} <!-- 8 -->
+      
+      
+      ·日期格式化
+      　　数字日期：{{ today|date:'dd' }} <!-- 09 -->
+      　　一个月中的第几天：{{ today | date:'d' }} <!-- 9 -->
+      　　英文星期：{{ today | date:'EEEE' }} <!-- Thursday -->
+      　　英文星期简写：{{ today | date:'EEE' }} <!-- Thu -->
+      
+      
+      ·小时格式化
+      　　24小时制数字小时：{{today|date:'HH'}} <!--00-->
+      　　一天中的第几个小时：{{today|date:'H'}} <!--0-->
+      　　12小时制数字小时：{{today|date:'hh'}} <!--18-->
+      　　上午或下午的第几个小时：{{today|date:'h'}} <!--18-->
+      
+      
+      ·分钟格式化
+      　　数字分钟数：{{ today | date:'mm' }} <!-- 08 -->
+      　　一个小时中的第几分钟：{{ today | date:'m' }} <!-- 8 -->
+      
+      
+      ·秒数格式化
+      　　数字秒数：{{ today | date:'ss' }} <!-- 02 -->
+      　　一分钟内的第几秒：{{ today | date:'s' }} <!-- 2 -->
+      　　毫秒数：{{ today | date:'.sss' }} <!-- .995 -->
+      
+      
+      ·字符格式化
+      　　上下午标识：{{ today | date:'a' }} <!-- AM -->
+      　　四位时区标识：{{ today | date:'Z' }} <!--- 0700 -->
+      
+      
+      ·下面是一些自定义日期格式的示例：
+      　　{{ today | date:'MMMd, y' }} <!-- Aug22, 2016 -->
+      　　{{ today | date:'EEEE, d, M' }} <!-- Thursday, 9, 8-->
+      　　{{ today | date:'hh:mm:ss.sss' }} <!-- 12:19:12.995 -->
+    ```  
 	* lowercase
   * uppercase
 	* json
@@ -249,24 +301,30 @@ angularjs模块被实现为两个阶段:配置阶段和运行阶段
 			var jsonString=$filter('json')(myObj);  //jsonString 是非常便于查看的json字符串
 		})
 		```
+		
+		示例参见: static/常用过滤器.html 常用过滤器2.html
+		
 * 自定义过滤器
 		
-		$filterProvider.register(自定义过滤器名称,function(
-				return function(){}  //返回的必须是个函数
-		){});
+		$filterProvider.register(自定义过滤器名称,function(){   //这是底层方法,不常用
 		
-		module.filter()
+						return function(){}  //返回的必须是个函数
+		});
+		
+		module.filter()  //便捷方式
 		
 		使用:  {{ expression|自定义过滤器名称 }}
 		
-
+		示例参见: static/自定义过滤器.html
+		
 * 购物车试验
 
 	1. 通过ng-repeat遍历
-	2. 模糊搜索
-	3. 排序
+	2. 模糊搜索-------扩展,搜索框默认搜索范围为所有属性,搜索框后边添加个下拉框,可以限定需要搜索的属性
+	3. 排序-----在每列的表头添加三角形图片,点击即可排序,正序倒序
 	4. 总金额/总数量计算
 	5. 商品移除
 	6. 商品数量增加减少
 	7. 清空购物车--显示相应信息
+	8. 过滤器 金额添加rmb字符,数量添加逗号等待
 		

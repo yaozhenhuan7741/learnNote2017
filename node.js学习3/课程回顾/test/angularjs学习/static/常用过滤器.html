@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>angularjs 学习</title>
+</head>
+<body ng-app="myApp">
+<div ng-controller="myCtrl">
+    <hr>
+    <br>
+    数字过滤器
+    <br>
+    {{ 12345 | number }}
+    <br>
+    {{ 12345 | number:2 }}
+    <hr>
+    <br>
+    货币过滤器
+    <br>
+    {{ 500 | currency }}
+    <br>
+    {{ 500 | currency:"人民币: " }}
+    <br>
+    <hr>
+    时间过滤器
+    <br>
+    {{ today  }}
+    <br>
+    {{ today | date }}
+    <br>
+    ·下面是内置的支持本地化的日期格式：
+    <br>
+    　　{{ today | date:'medium' }} <!-- Aug 09, 2016 12:09:02 PM -->
+        <br>
+    　　{{ today | date:'short' }} <!-- 11/11/1612:09PM -->
+    　　<br>
+        {{ today | date:'fullDate' }} <!-- Thursday, August 09, 2016 -->
+    　　<br>
+        {{ today | date:'longDate' }} <!-- August 09, 2016 -->
+    　　<br>
+        {{ today | date:'mediumDate' }}<!-- Aug 09, 2016 -->
+    　　<br>
+        {{ today | date:'shortDate' }} <!-- 8/9/16 -->
+    　　<br>
+        {{ today | date:'mediumTime' }}<!-- 12:10:12 PM -->
+    　　<br>
+       {{ today | date:'shortTime' }} <!-- 12:09 PM -->
+    <br>
+
+    ·年份格式化
+    　　<br>
+    四位年份：{{ today | date:'yyyy' }} <!-- 2016 -->
+    　　<br>两位年份：{{ today | date:'yy' }} <!-- 13 -->
+    　　<br>一位年份：{{ today | date:'y' }} <!-- 2016 -->
+
+    <br>
+    ·月份格式化
+    　　<br>英文月份：{{ today | date:'MMMM' }} <!-- August -->
+    　　<br>英文月份简写：{{ today | date:'MMM' }} <!-- Aug -->
+    　　<br>数字月份：{{ today |date:'MM' }} <!-- 08 -->
+    　　<br>一年中的第几个月份：{{ today |date:'M' }} <!-- 8 -->
+
+    <br>
+    ·日期格式化
+    　　<br>数字日期：{{ today|date:'dd' }} <!-- 09 -->
+    　　<br>一个月中的第几天：{{ today | date:'d' }} <!-- 9 -->
+    　　<br>英文星期：{{ today | date:'EEEE' }} <!-- Thursday -->
+    　　<br>英文星期简写：{{ today | date:'EEE' }} <!-- Thu -->
+
+    <br>
+    ·小时格式化
+    　　<br>24小时制数字小时：{{today|date:'HH'}} <!--00-->
+    　　<br>一天中的第几个小时：{{today|date:'H'}} <!--0-->
+    　　<br>12小时制数字小时：{{today|date:'hh'}} <!--18-->
+    　　<br>上午或下午的第几个小时：{{today|date:'h'}} <!--18-->
+    <br>
+
+    ·分钟格式化
+    　　<br>数字分钟数：{{ today | date:'mm' }} <!-- 08 -->
+    　　<br>一个小时中的第几分钟：{{ today | date:'m' }} <!-- 8 -->
+
+    <br>
+    ·秒数格式化
+    　　<br>数字秒数：{{ today | date:'ss' }} <!-- 02 -->
+    　　<br>一分钟内的第几秒：{{ today | date:'s' }} <!-- 2 -->
+    　　<br>毫秒数：{{ today | date:'.sss' }} <!-- .995 -->
+    <br>
+
+    ·字符格式化
+    　　<br>上下午标识：{{ today | date:'a' }} <!-- AM -->
+    　　<br>四位时区标识：{{ today | date:'Z' }} <!--- 0700 -->
+
+    <br>
+    ·下面是一些自定义日期格式的示例：
+    　　<br>{{ today | date:'MMMd, y' }} <!-- Aug22, 2016 -->
+    　　<br>{{ today | date:'EEEE, d, M' }} <!-- Thursday, 9, 8-->
+    　　<br>{{ today | date:'hh:mm:ss.sss' }} <!-- 12:19:12.995 -->
+       <br>{{ today | date:'yyyy-MM-dd HH:mm:ss' }}
+    <br>
+    <hr>
+    <br>
+    大小写转换
+    <br>
+    {{ 'zhangsan' | uppercase}}
+    <br>
+    {{ 'LISI' | lowercase }}
+    <br>
+    <hr>
+    <br>
+    限制数量
+    <br>
+    {{ [1,2,3,4,5] | limitTo:3 }}
+    <br>
+    {{ [1,2,3,4,5] | limitTo:-3 }}
+    <hr>
+
+</div>
+
+<script type="text/javascript" src="js/angular.min.1.3.js"></script>
+<script>
+angular.module('myApp',[])
+.controller('myCtrl',function ($scope) {
+    $scope.today=new Date;
+})
+</script>
+</body>
+</html>
