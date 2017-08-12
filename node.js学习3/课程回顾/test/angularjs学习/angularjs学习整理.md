@@ -419,6 +419,8 @@ ng-value|规定 input 元素的值
 		ng-options="option.id as option.title for option in curOptionArray"
 		 option.id是select提交的值 option.title是select显示的值 option代表数组curOptionArray里面的当前元素
 	
+* 自定义指令
+	
 	
 		
 	
