@@ -7,6 +7,10 @@
 	1.2之后不再支持ie8,如果遇到需要兼容ie8的情况，使用1.2即可
 	
 	
+### 参考
+	
+	http://www.runoob.com/angularjs/angularjs-reference.html
+	
 #### angularjs基础
 
 1. 各种组件和概念
@@ -84,7 +88,10 @@ angularjs模块被实现为两个阶段:配置阶段和运行阶段
 	MVC ： 模型，视图，控制器
 	数据绑定 ： 双向绑定，mvvm模式，自动将model和view间的数据同步
 	依赖注入 ： angularjs的依赖注入，执行的时候，会自动获取它需要的东西，而不是把所有的依赖全部创建。
-	
+			隐式依赖注入,即直接在函数参数中,使用$scope $http等等模块作为参数,但是这种方式,如果对使用工具对代码进行压缩,参数会被替换成其他简单变量,如a,b,导致无法注入
+				如: myApp.controller('myCtrl',function($scope){})
+			显示依赖注入,	使用数组,数组最后一项是函数,前边的其他项是依赖注入的模块,函数的参数,即为前边注入的模块,并且参数顺序为模块在数组中的顺序.
+				如: myApp.controller('myCtrl,['$scope','$http',function(a,b){}])  //函数中a,就是$scope,b就是$http,写代码时,参数名尽量保持一致,便于理解. 
 
 试验代码：static下 js css
 
@@ -103,6 +110,13 @@ angularjs模块被实现为两个阶段:配置阶段和运行阶段
 * 控制器	
 	
 	ng-controller 控制器 ng-controller="myCtrl"  myCtrl是一个函数，参数必须包含$scope，即它的作用域  (注：angular 1.6 版，不支持直接使用函数作为控制器)
+	控制器,应该仅仅包含单个试图所需要的业务逻辑
+	不要在控制器中做的操作:
+		1. 任何类型的dom操作,不要在控制器中实现,而是使用指令directive
+		2. 输入格式化,使用angular form controls,不要使用控制器
+		3. 输出格式化,使用过滤器
+		4. 共享的代码,使用factory或service
+		5. 管理其他组件的生命周期,使用module,而不要使用控制器
 
 * ng-bind	
 	
@@ -138,6 +152,8 @@ angularjs模块被实现为两个阶段:配置阶段和运行阶段
 	
 	例如，监测密码输入，密码改变一次，就记录一次次数，如果次数大于某个值，就不允许尝试了。
 	示例参见：static/监测之watch.html
+	
+下面是在教程实例中出现的一些常用指令,后边有专门对指令学习的内容.
 	
 * ng-init
 
@@ -316,6 +332,96 @@ angularjs模块被实现为两个阶段:配置阶段和运行阶段
 		使用:  {{ expression|自定义过滤器名称 }}
 		
 		示例参见: static/自定义过滤器.html
+		
+*  指令  
+		
+	参考: http://www.runoob.com/angularjs/angularjs-reference.html	
+	可以用指令来扩展html标签.
+	angular有很多内置指令,也可以自定义指令.
+	内置指令分类,渲染指令,事件指令,节点指令.
+	指令的名称,有多种不同的形式,(因为不同浏览器对html元素的校验规则不同),如: 
+		ng-bind(无校验)  data-ng-bind(html5校验) ng:bind(xml校验) x-ng-bind(XHTML校验)
+	
+	
+指令|描述
+:---|:---
+ng-app|定义应用程序的根元素。
+ng-bind|绑定 HTML 元素到应用程序数据
+ng-bind-html|绑定 HTML 元素的 innerHTML 到应用程序数据，并移除 HTML 字符串中危险字符
+ng-bind-template|规定要使用模板替换的文本内容
+ng-blur|规定 blur 事件的行为
+ng-change|规定在内容改变时要执行的表达式
+ng-checked|规定元素是否被选中
+ng-class|指定 HTML 元素使用的 CSS 类
+ng-class-even|类似 ng-class，但只在偶数行起作用
+ng-class-odd|类似 ng-class，但只在奇数行起作用
+ng-click|定义元素被点击时的行为
+ng-cloak|在应用正要加载时防止其闪烁
+ng-controller|定义应用的控制器对象
+ng-copy|规定拷贝事件的行为
+ng-csp|修改内容的安全策略
+ng-cut|规定剪切事件的行为
+ng-dblclick|规定双击事件的行为
+ng-disabled|规定一个元素是否被禁用
+ng-focus|规定聚焦事件的行为
+ng-form|指定 HTML 表单继承控制器表单
+ng-hide|隐藏或显示 HTML 元素
+ng-href|为 the <a> 元素指定链接
+ng-if|如果条件为 false 移除 HTML 元素
+ng-include|在应用中包含 HTML 文件
+ng-init|定义应用的初始化值
+ng-jq|定义应用必须使用到的库，如：jQuery
+ng-keydown|规定按下按键事件的行为
+ng-keypress|规定按下按键事件的行为
+ng-keyup|规定松开按键事件的行为
+ng-list|将文本转换为列表 (数组)
+ng-model|绑定 HTML 控制器的值到应用数据
+ng-model-options|规定如何更新模型
+ng-mousedown|规定按下鼠标按键时的行为
+ng-mouseenter|规定鼠标指针穿过元素时的行为
+ng-mouseleave|规定鼠标指针离开元素时的行为
+ng-mousemove|规定鼠标指针在指定的元素中移动时的行为
+ng-mouseover|规定鼠标指针位于元素上方时的行为
+ng-mouseup|规定当在元素上松开鼠标按钮时的行为
+ng-non-bindable|规定元素或子元素不能绑定数据
+ng-open|指定元素的 open 属性
+ng-options|在 <select> 列表中指定 <options>
+ng-paste|规定粘贴事件的行为
+ng-pluralize|根据本地化规则显示信息
+ng-readonly|指定元素的 readonly 属性
+ng-repeat|定义集合中每项数据的模板
+ng-selected|指定元素的 selected 属性
+ng-show|显示或隐藏 HTML 元素
+ng-src|指定 <img> 元素的 src 属性
+ng-srcset|指定 <img> 元素的 srcset 属性
+ng-style|指定元素的 style 属性
+ng-submit|规定 onsubmit 事件发生时执行的表达式
+ng-switch|规定显示或隐藏子元素的条件
+ng-transclude|规定填充的目标位置
+ng-value|规定 input 元素的值
+
+	
+	
+渲染指令: 将html代码中的ng指令,渲染成html标签/元素.
+	常用: ng-init ng-bind ng-bind-template ng-repeat ng-include
+			ng-init: 用于初始化一些变量值
+			ng-repeat:  $index 当前索引  $first 是否为头元素 $middle 是否为非头非尾元素 $last 是否为尾元素
+			ng-bind-template: 它的值可以是 文字 + 表达式,而ng-bind只能是表达式.
+			ng-include: 可以包含其他html文件,另种写法 ng-include="'xxx.html'" 或者 ng-include src="'xxx.html'"
+			
+事件指令: 使用angular的事件指令代替html的事件指令,好处是,可以自动触发脏检查.
+	常用: ng-change ng-click ng-dblclick ng-mousedown ng-mouseenter ng-mouseleave ng-mousemove ng-mouseover ng-mouseup ng-submit
+	
+节点指令: 代替html元素属性的一些指令
+	常用:ng-style ng-class ng-class-even ng-class-odd ng-show ng-hide ng-switch ng-src ng-href ng-if
+	节点指令,通常情况下,比html自带的,多了一个逻辑判断,具体的实验在购物车实验中体现.
+	如:
+		ng-options="option.id as option.title for option in curOptionArray"
+		 option.id是select提交的值 option.title是select显示的值 option代表数组curOptionArray里面的当前元素
+	
+	
+		
+	
 		
 * 购物车试验
 
