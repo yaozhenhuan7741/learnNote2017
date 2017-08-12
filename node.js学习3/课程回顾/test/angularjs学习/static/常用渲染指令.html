@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>angularjs 学习</title>
+</head>
+<body ng-app="myApp">
+<div ng-controller="myCtrl">
+
+    <div ng-init="cityArr=[{name:'北京'},{name:'上海'},{name:'广州'},{name:'深圳'}]">
+        <br>直接使用表达式: <br>
+        {{ title }}
+        <br>使用ng-bind: <br>
+        <h2 ng-bind="cityArr.length / 2"></h2>
+        <br>使用ng-bind-template<br>
+        <h2 ng-bind-template="{{ cityArr.length / 2 }}"></h2>
+
+        <table>
+            <tr ng-repeat="city in cityArr">
+                <td ng-bind-template="index: {{ $index }}"></td>
+                <td ng-bind-template="first: {{ $first }}"></td>
+                <td ng-bind-template="middle: {{ $middle }}"></td>
+                <td ng-bind-template="last: {{ $last }}"></td>
+                <td ng-bind-template="city: {{ city }}"></td>
+            </tr>
+        </table>
+        <p ng-include='"other.html"'></p>
+        <p ng-include src="'other.html'"></p>
+
+
+    </div>
+
+</div>
+
+<script type="text/javascript" src="js/angular.min.1.3.js"></script>
+<script>
+angular.module('myApp',[])
+.controller('myCtrl',function ($scope) {
+    $scope.title='城市列表';
+    $scope.hello='<h2>你好</h2>';
+})
+</script>
+</body>
+</html>
