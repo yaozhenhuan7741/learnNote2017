@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>angularjs 学习</title>
+</head>
+<body ng-app="myApp">
+<div ng-controller="AppCtrl">
+    <h2>系统消息:{{ message }}</h2>
+</div>
+<hr>
+<div ng-controller="ModCtrl">
+    <h2>系统消息:{{ message }}</h2>
+</div>
+<script src="js/angular.min.1.2.js"></script>
+<script>
+    //定义第一个模块myMod
+var myMod=angular.module('myMod',[]);
+myMod.value('modMsg','来自myMod的问候');
+myMod.controller('ModCtrl',['$scope','modMsg',function ($scope,msg) {  //注入modMsg
+    $scope.message =msg;  //msg对应注入的modMsg
+}]);
+
+//定义第二个模块myApp，并将modApp注入到里面
+var myApp=angular.module('myApp',['myMod']);
+myApp.value('appMsg','来自myApp的问候');
+myApp.controller('AppCtrl',['$scope','appMsg',function ($scope,msg) {
+  $scope.message=msg;
+}]);
+</script>
+</body>
+</html>

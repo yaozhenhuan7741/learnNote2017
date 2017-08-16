@@ -410,7 +410,7 @@ ng-value|规定 input 元素的值
 			ng-include: 可以包含其他html文件,另种写法 ng-include="'xxx.html'" 或者 ng-include src="'xxx.html'"
 			
 事件指令: 使用angular的事件指令代替html的事件指令,好处是,可以自动触发脏检查.
-	常用: ng-change ng-click ng-dblclick ng-mousedown ng-mouseenter ng-mouseleave ng-mousemove ng-mouseover ng-mouseup ng-submit
+	常用: ng-change ng-click ng-dblclick ng-mousedown ng-mouseenter ng-mouseleave ng-mousemove ng-mouseover ng-mouseup ng-submit ng-blur ng-checked ng-copy ng-cut ng-focus ng-keydown ng-keypress ng-paste  如: ng-click="myClick($event)"
 	
 节点指令: 代替html元素属性的一些指令
 	常用:ng-style ng-class ng-class-even ng-class-odd ng-show ng-hide ng-switch ng-src ng-href ng-if
@@ -419,9 +419,15 @@ ng-value|规定 input 元素的值
 		ng-options="option.id as option.title for option in curOptionArray"
 		 option.id是select提交的值 option.title是select显示的值 option代表数组curOptionArray里面的当前元素
 	
-* 自定义指令
+例子： 将一个模块注入到另一个模块，并在另一个模块中，是用它的控制器	 			 
+示例参见: static/在控制器和模块定义中实现依赖注入.html	
+
+例子： 控制器、作用域和模板的关系
+示例参见: static/基本的控制器和模板示例.html
 	
-	待补充
+* 自定义指令 directive
+	
+	待
 	
 		
 	

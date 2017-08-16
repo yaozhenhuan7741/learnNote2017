@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>angularjs 学习</title>
+</head>
+<body ng-app="myApp">
+<div ng-controller="myCtrl">
+    ValueA: <input type="text" ng-model="valueA"> <br>
+    ValueA: <input type="text" ng-model="valueB"> <br> <br>
+    通过表达式计算的值: {{ valueA + valueB}}
+    <br><br>
+    <button type="button" ng-click="addValues(valueA,valueB)">计算</button>
+    <br>
+    点击按钮的结果: {{ valueC }} <br>
+
+
+</div>
+
+<script src="js/angular.min.1.2.js"></script>
+<script>
+var myApp=angular.module('myApp',[]);
+myApp.controller('myCtrl',['$scope',function ($scope) {
+  $scope.valueA=5;
+  $scope.valueB=7;
+  $scope.valueC=12;
+  $scope.addValues=function (v1,v2) {
+    $scope.valueC=v1 +v2;
+  }
+}]);
+</script>
+</body>
+</html>
