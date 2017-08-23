@@ -227,7 +227,26 @@ angularjs模块被实现为两个阶段:配置阶段和运行阶段
 	
 * 作用域的层次结构
 	
-	树状结构，子作用域可以访问父作用域，不能访问兄弟作用域；父作用域不能访问子作用域	
+	树状结构，子作用域可以访问父作用域，不能访问兄弟作用域；父作用域不能访问子作用域。  示例在后边。
+	可以使用 发出和广播 ，在各个作用域之间通讯。
+	
+	从作用域发出一个事件，使用$emit()方法。  语法： scope.$emit(name,[args,...])  name是事件名称，args是传递给事件处理函数的0个或多个参数
+	
+	广播，可以使用$broadcast()方法，把一个事件广播给下方的子作用域层次。任何已注册该事件的后代作用域，都会收到通知。语法： scope.$broadcast(name,[args,...])
+	
+	处理发出或广播的事件，可以使用$on()方法。 语法： scope.$on(name,listener) name是要监听的事件名称，listener参数是一个函数，他可以接收事件作为第一个参数，并把由$emit或$broadcast()方法传递的任何参数作为后续的参数。
+	
+		其中，event对象具有以下属性：
+		1. targetScope  $emit或$broadcast被调用时所在的作用域
+		2. currentScope 当前正在处理该事件的作用域
+		3. name 事件的名称
+		4. stopPropagation() 停止在作用域层次结构中向上或向下传播事件的函数。
+		5. preventDefault() 防止在浏览器的事件中的默认行为，而只执行自己的自定义的代码的函数。
+		6. defaultPrevented: 布尔值，如果 event.preventDefault()被调用，则为true。
+		
+		示例在后边。
+		
+		
 
 * 过滤器
 
