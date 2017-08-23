@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>angularjs 学习</title>
+</head>
+<body ng-app="myApp">
+<div ng-controller="LevelA">
+    <h3>{{ title }}</h3>
+    ValueA={{ valueA }} <input type="button" ng-click="inc()" value="+">
+    <div ng-controller="LevelB">
+        <hr>
+        <h3>{{title}}</h3>
+        ValueA={{valueA}} <br>
+        ValueB={{valueB}} <input type="button" ng-click="inc()" value="+">
+        <div ng-controller="LevelC">
+
+            <hr>
+            <h3>{{title}}</h3>
+            ValueA={{valueA}}
+            <br>
+            ValueB={{valueB}}
+            <br>
+            ValueC={{valueC}}
+            <input type="button" ng-click="inc()" value="+">
+            
+        </div>
+
+    </div>
+
+
+
+</div>
+
+<script src="js/angular.min.1.2.js"></script>
+<script>
+angular.module('myApp',[])
+  .controller('LevelA',function ($scope) {
+  $scope.title = '控制器A';
+  $scope.valueA = 1;
+  $scope.inc=function () {
+    $scope.valueA++;
+  };
+})
+  .controller('LevelB',function ($scope) {
+    $scope.title = '控制器B';
+    $scope.valueB=1;
+    $scope.inc =function() {
+      $scope.valueB++;
+	  };
+  })
+  .controller('LevelC',function ($scope) {
+    $scope.title='控制器C';
+    $scope.valueC=1;
+    $scope.inc =function() {
+        $scope.valueC++;
+	  }
+  });
+
+</script>
+</body>
+</html>
