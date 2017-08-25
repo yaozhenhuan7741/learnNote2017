@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>angularjs 学习</title>
+    <style>
+        div{padding:5px;font: 18px bold}
+        span{padding:3px;margin:12px;border:5px ridge; cursor:pointer;}
+        label{padding:2px;margin:5px;font:15px bold}
+        p{padding-left:22px;margin:5px}
+
+    </style>
+</head>
+<body ng-app="myApp">
+<div ng-controller="Characters">
+    <span ng-repeat="name in names" ng-click="changeName()"> {{ name }} </span>
+    <div ng-controller="Character">
+        <hr>
+        <label>姓名: </label> <p>{{currentName}}</p> <br>
+        <label>武器: </label> <p>{{ currentInfo["武器"] }}</p> <br>
+        <label>种族: </label> <p>{{ currentInfo["种族"] }}</p> <br>
+        <span ng-click="deleteChar()">删除</span>
+
+
+    </div>
+
+</div>
+
+<script src="js/angular.min.1.2.js"></script>
+<script>
+angular.module('myApp',[])
+  .controller('Characters',function ($scope) {
+    //父作用域
+    $scope.names = ['麦迪文','剑圣','卡尔','鱼人守卫'];
+    $scope.currentName = $scope.names[0];
+    $scope.changeName=function () {
+      $scope.currentName=this.name;    //!!! 这里的this，需要关注一下
+      $scope.$broadcast('CharacterChanged',this.name);  //通过广播发出事件
+    };
+    $scope.$on('CharacterDeleted',function (event,removeName) {
+      //监听事件
+      var i = $scope.names.indexOf(removeName); //找到被移除的name的索引
+      $scope.names.splice(i, 1);  //移除
+      $scope.currentName=$scope.names[0];
+      $scope.$broadcast('CharacterChanged',$scope.currentName); //发出广播
+    })
+
+  })
+  .controller('Character',function ($scope) {
+    //子作用域
+    $scope.info ={
+    	'麦迪文':{'武器':'法杖','种族':'人族'},
+    	'剑圣':{'武器':'剑','种族':'兽族'},
+    	'卡尔':{'武器':'魔法书','种族':'精灵族'},
+    	'鱼人守卫':{'武器':'刀','种族':'娜迦'}
+
+    };
+    $scope.currentInfo=$scope.info['麦迪文'];
+    $scope.$on('CharacterChanged',function (event,newCharacter) {
+    	//监听事件
+      $scope.currentInfo=$scope.info[newCharacter];
+    });
+    $scope.deleteChar=function () {
+      delete $scope.info[$scope.currentName];
+      $scope.$emit('CharacterDeleted',$scope.currentName); //发出事件
+    }
+  })
+
+</script>
+</body>
+</html>
