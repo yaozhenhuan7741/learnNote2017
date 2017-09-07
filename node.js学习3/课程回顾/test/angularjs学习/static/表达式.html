@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+</head>
+<body data-ng-app="myApp">
+<div ng-controller="myCtrl">
+	<h1>表达式</h1>
+	{{ "王" + "五"}} <br>
+	{{ first }}{{last}} <br>
+	{{ combine('王','五')}} <br>
+	{{ combine(first,last )}} <br>
+	<p ng-click="setName(newFirst,newLast)">
+		单击修改为{{newFirst}} {{newLast}}
+	</p>
+	<p ng-click="setName('张','三')">
+		单击修改为张三
+	</p>
+</div>
+<script src="js/angular.min.1.2.js"></script>
+<script>
+	angular.module('myApp',[])
+		.controller('myCtrl',['$scope',function ($scope) {
+			$scope.first='张';
+			$scope.last ='三';
+			$scope.newFirst='李';
+			$scope.newLast='四';
+
+			$scope.combine=function (fName,lName) {
+				return fName + ' ' + lName;
+			};
+			$scope.setName =function(fName,lName) {
+				$scope.first = fName;
+				$scope.last = lName;
+			}
+		}])
+</script>
+</body>
+</html>

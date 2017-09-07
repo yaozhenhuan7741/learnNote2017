@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+</head>
+<body data-ng-app="myApp">
+<div ng-controller="myCtrl">
+	<h2>敏感词过滤</h2>
+	{{ phrase | censor:"***" }} <br>
+	{{ "this is some bad,dark evil text"|censor:'happy' }} <br>
+	<p ng-click="filterText()">{{txt}}</p>
+	<br>
+</div>
+<script src="js/angular.min.1.2.js"></script>
+<script>
+	angular.module('myApp',[])
+
+		.filter('censor',function () {  //censor 审查的意思
+				return function (input,replacement) {
+					var cWords=['bad','evil','dark'];  //定义敏感词数组
+					var out=input;
+					for (var i=0;i<cWords.length;i++){
+						out = out.replace(cWords[i],replacement);  //将字符串中的敏感词替换
+					}
+					return out;  //将处理之后的数据返回
+				}
+		})
+		.controller('myCtrl',['$scope','censorFilter',function ($scope,censorFilter) {
+			//注入自定义的过滤器
+			$scope.phrase="This is a bad phrase.";
+			$scope.txt ="点击过滤掉 dark and evil";
+			$scope.filterText=function () {
+				$scope.txt=censorFilter($scope.txt,'<看不到>')
+			};
+
+
+	}])
+</script>
+</body>
+</html>

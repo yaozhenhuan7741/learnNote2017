@@ -250,9 +250,26 @@ angularjs模块被实现为两个阶段:配置阶段和运行阶段
 
 * 过滤器
 
+	使用方法一：在html模板中使用
 	{{ expression|filter}}
 	{{ expression|filter1|filter2}}
 	{{ expression|filter1:param1:param2... }}
+	
+	使用方法二：在控制器中使用，将“过滤器提供器”注入到控制器中使用，过滤器提供器=过滤器+“Filter”,比如过滤器是currency,那过滤器提供器就是currencyFilter
+	controller('myCtrl',function($scope,currencyFilter)(
+		$scope.getCurrencyValue=function(value){
+			return currencyFilter(value,"$USD")
+		}
+	))
+	
+	使用方法三：$filter注入，  $filter(过滤器)(参数一)(参数二)...
+        
+  controller('name',function($scope,$filter){
+    var num=$filter('number')(3000);   //num=3,000  $filter(过滤器名称)(参数1)(参数二)
+    
+    var jsonString=$filter('json')(myObj);  //jsonString 是非常便于查看的json字符串
+  })
+        	
 
 * 常用过滤器
 
@@ -340,29 +357,26 @@ angularjs模块被实现为两个阶段:配置阶段和运行阶段
 		filter:{name:'a'}  //只过滤name属性的值包含a的
 		filter:functionName  //使用自定义的函数来过滤,符合条件的返回true
 		
-		$filter注入
-		```
-		controller('name',function($scope,$filter){
-			var num=$filter('number')(3000);   //num=3,000  $filter(过滤器名称)(参数1)(参数二)
-			
-			var jsonString=$filter('json')(myObj);  //jsonString 是非常便于查看的json字符串
-		})
-		```
+		
 		
 		示例参见: static/常用过滤器.html 常用过滤器2.html
 		
+		
+		
 * 自定义过滤器
-		
-		$filterProvider.register(自定义过滤器名称,function(){   //这是底层方法,不常用
-		
-						return function(){}  //返回的必须是个函数
-		});
-		
-		module.filter()  //便捷方式
-		
-		使用:  {{ expression|自定义过滤器名称 }}
-		
-		示例参见: static/自定义过滤器.html
+
+	方法一：		
+	$filterProvider.register(自定义过滤器名称,function(){   //这是底层方法,不常用
+	
+					return function(){}  //返回的必须是个函数
+	});
+	方法二：
+	
+	module.filter()  //便捷方式
+	
+	使用:  {{ expression|自定义过滤器名称 }}
+	
+	示例参见: static/自定义过滤器.html
 		
 *  指令  
 		
@@ -461,6 +475,15 @@ ng-value|规定 input 元素的值
 
  例子：作用域层次结构中，$emit和$broadcast事件
  示例参见: static/作用域层次结构中的emit和broadcast事件.html
+
+例子：表达式
+示例参见: static/表达式.html
+
+例子：使用过滤器实现排序和过滤
+示例参见: static/排序和过滤.html
+
+例子：自定义过滤器之敏感词过滤
+示例参见: static/自定义过滤器之敏感词过滤.html
 
 	
 * 自定义指令 directive
