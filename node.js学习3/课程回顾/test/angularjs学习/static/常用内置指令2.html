@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" data-ng-app="myApp">
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+	<style>
+		.even {background-color: lightblue;}
+		.rect {display:inline-block;height: 40px;
+			width: 100px;}
+	</style>
+</head>
+<body>
+<div ng-controller="myCtrl">
+	<h2>内置指令之事件指令</h2>
+	<input type="text"
+		ng-blur="focusState='Blurred'"
+		ng-focus="focusState='Focused'"
+		ng-mouseenter="mouseState='Entered'"
+		ng-mouseleave="mouseState='leave'"
+		ng-mouseclick="mouseState='clicked'"
+		ng-mousedown="mouseState='down'"
+		ng-mouseup="mouseState='up'"
+		ng-keyup="keyStrock($event)"
+		ng-click="mouseClick($event)"
+	>
+	<hr>
+	Focus State: {{focusState}} <br>
+	Mouse State: {{mouseState}} <br>
+	Key Info: {{keyInfo|json}} <br>
+	Mouse Info:{{mouseInfo|json}} <br>
+</div>
+<script src="js/angular.min.1.2.js"></script>
+<script>
+	angular.module('myApp',[])
+		.controller('myCtrl',['$scope',function ($scope) {
+			$scope.keyInfo={};
+			$scope.mouseInfo={};
+			$scope.keyStrock=function (event) {
+				$scope.keyInfo.keyCode=event.keyCode;
+			};
+
+			$scope.mouseClick=function (event) {
+				$scope.mouseInfo.clientX=event.clientX;
+				$scope.mouseInfo.clientY=event.clientY;
+				$scope.mouseInfo.screenX=event.screenX;
+				$scope.mouseInfo.screenY=event.screenY;
+			}
+
+		}])
+</script>
+</body>
+</html>

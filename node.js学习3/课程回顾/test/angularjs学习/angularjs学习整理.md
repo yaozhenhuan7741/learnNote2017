@@ -383,10 +383,12 @@ angularjs模块被实现为两个阶段:配置阶段和运行阶段
 	参考: http://www.runoob.com/angularjs/angularjs-reference.html	
 	可以用指令来扩展html标签.
 	angular有很多内置指令,也可以自定义指令.
-	内置指令分类,渲染指令,事件指令,节点指令.
+	内置指令分类,渲染指令,事件指令,节点指令;也可以分为，支持angularjs功能的指令，扩展表单元素的指令，把作用域绑定到页面元素的指令，把网页事件绑定到控制器的指令。
 	指令的名称,有多种不同的形式,(因为不同浏览器对html元素的校验规则不同),如: 
 		ng-bind(无校验)  data-ng-bind(html5校验) ng:bind(xml校验) x-ng-bind(XHTML校验)
-	
+		
+		
+
 	
 指令|描述
 :---|:---
@@ -484,6 +486,9 @@ ng-value|规定 input 元素的值
 
 例子：自定义过滤器之敏感词过滤
 示例参见: static/自定义过滤器之敏感词过滤.html
+
+例子: 常用内置指令
+示例参见: static/常用内置指令.html
 
 	
 * 自定义指令 directive
