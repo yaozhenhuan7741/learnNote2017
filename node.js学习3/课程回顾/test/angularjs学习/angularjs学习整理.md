@@ -493,11 +493,85 @@ ng-value|规定 input 元素的值
 	
 * 自定义指令 directive
 	
-	待
+	自定义指令，通常用于操作dom的代码
+	指令名称，使用驼峰式，在页面调用时，使用-或:等方式，如myDirective   --> my-directive
 	
-		
+	创建方式： 使用 directive
+	angular.module('myApp',[]).
+	directive('myDirective',function(){  //定义指令名称，
+		return {       //返回的是一个json
+			xx:xx,
+			template:'name:{{name}}'
+		};
 	
-		
+	})
+	
+	返回的json对象，可以有一下属性
+	* template: 定义插入指令的元素的模板文本
+	* templateUrl： 指定一个url，局部模板
+	* restrict：  重要! 定义该指令在html中的形式，A 属性，E 元素，C 类名，M 注释
+	* replace:  如果true，指令的模板会取代该自定义指令的元素
+	* transclude: 允许你指定指令是否可以访问内部作用域以外的作用域，在template中，添加ng-transclude属性，使自定义指令的值来替换模板中的值
+	* scope： 允许为指令指定内部作用域
+	* link: 允许在拟定可以访问该作用域、dom元素和属性的链接函数
+	* controller: 允许在指令中定义一个控制器来管理该指令的作用域和视图
+	* require: 允许指定要实现这个指令所需要的其他指令，这些指令的提供器对于创建这个指令是可用的。
+	
+	
+ 定义指令视图模板----注：模板中只能有一个根元素
+    template
+    templateUrl
+ 限制指令行为----自定义指令在html中的形式
+  A E C M      
+ 更换模板元素----如果true,编译器会把自定义指令替换为模板中的元素
+    replace:true 
+ 转置外部作用域
+    使用transclude配合ng-transclude来替换元素内容   
+ 配置指令作用域 ----不太懂教程里对该部分的描述，待试验后在整理
+    有时，需要把一个指令里面的作用域与该指令外面的作用域分离，可以防止该指令在本地控制器改变值的可能性。
+    指令定义允许指定一个创建隔离作用域的作用域。
+    将外部作用域的一些项目，映射到指令的作用域内，可以使用下面的前缀属性名
+      @ 把一个局部作用域内的字符串绑定到dom属性值中。该属性的值将在指令作用域内可用---单向绑定，父影响子，子不影响父
+      = 在局部作用域和指令作用域属性之间创建一个双向的绑定
+      & 把在局部作用域内的函数绑定到指令作用域----将内部scope的函数的返回值，和外部的scope的任何属性绑定起来
+ 操纵dom的链接功能
+    angularjs的html编译器，遇到一个指令时，会允许该指令的编译函数，这返回link()函数。link()函数被添加到angularjs指令列表，一旦所有的指令都被编译完成，则html编译器，根据优先级顺序，调用link()函数.
+    link:function(scope,element,attributes,[controller]){} 
+    scope参数是指令的作用域，element是指令将被插入的元素，attribute列出该元素中定义的属性，而controller是由require选项指定的控制器。     
+    如：
+    directive('myDirective',function(){
+      return {
+        scope:{title:'='},
+        require:'^otherController',  // ^指的是向上级元素找
+        link:function(scope,elem,attr,otherController){
+          scope.title="new";
+          elem.append('linked');
+          elem.on('$destroy',function(){
+            //清理代码
+          });
+          scope.$watch('title',function(newVal){
+            //监视代码
+          })
+        }
+      }
+    }) 
+ 添加一个控制器到指令
+    可以利用指令的controller属性，为指令添加自定义控制器。这使你可以为指令模板提供控制器支持。
+    如：
+      directive('myDirective',function(){
+        return {
+          scope:{title:'='},
+          controller:function($scope){
+            $scope.title='new',
+            $scope.myFun=function(){}
+          }
+        }
+      })	
+      
+	
+ 例子： 自定义指令试验
+ 示例参见: static/自定义指令试验.html		static/自定义指令试验子页面.html
+				
 * 购物车试验
 
 	1. 通过ng-repeat遍历

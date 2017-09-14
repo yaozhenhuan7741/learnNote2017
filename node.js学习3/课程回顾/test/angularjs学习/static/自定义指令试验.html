@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" data-ng-app="myApp">
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+</head>
+<body >
+<my-photos>
+	<my-photo title="一花">
+		<img src="../../images/1.jpg" height="150px">
+	</my-photo>
+	<my-photo title="一叶">
+		<img src="../../images/2.jpg" height="150px">
+	</my-photo>
+	<my-photo title="一世界">
+		<img src="../../images/3.jpg" height="150px">
+	</my-photo>
+
+
+</my-photos>
+
+
+<script src="js/angular.min.1.2.js"></script>
+<script>
+	angular.module('myApp',[])
+		.directive('myPhotos',function () {  //第一个自定义指令，用于遍历所有照片
+			return {
+				restrict:'E',  //限制指令为元素
+				transclude:true, //转置外部作用域
+				scope:{},  //完全隔离的作用域
+				controller:function ($scope) {  //为指令定义控制器
+					var photos=$scope.photos = [];  //照片数组
+					$scope.select =function (photo) {   //函数，选中照片
+						angular.forEach(photos, function (photo) {
+							photo.selected =false;  //将每张照片的选中状态都置为假
+						});
+						photo.selected = true;  //将选中的照片的选中状态设置为真
+					};
+					this.addPhoto=function (photo) {  //函数，增加照片
+						photos.push(photo);
+					}
+				},
+				templateUrl:'自定义指令试验子页面.html'
+			}
+		})
+		.directive('myPhoto',function () {  //第二个自定义指令，对每张照片进行显示
+			return {
+				require:'^myPhotos', //它的上级元素必须有myPhotos
+				restrict:'E', //限制为元素
+				transclude:true,
+				scope:{title:'@'},  //作用域，
+				link:function (scope,elem,attrs,photosControl) {
+					photosControl.addPhoto(scope)
+				},
+				template:'<div ng-show="selected" ng-transclude></div>'
+			}
+		})
+
+</script>
+
+</body>
+</html>
