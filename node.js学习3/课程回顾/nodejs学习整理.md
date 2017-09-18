@@ -2581,4 +2581,8 @@ cookie|指定把会话链接到浏览器的cookie对象
 下面学习angularjs相关知识，结合其他教学视频学习
 
 44. 学习笔记 见 [angularjs学习笔记]('../angularjs学习/angularjs学习整理.md')
+
+angularjs基础相关知识学习完成，教程中下面的课程是综合 nodejs  express  mongodb  angularjs进行试验。
+
+
 	
