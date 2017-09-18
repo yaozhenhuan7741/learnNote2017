@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" data-ng-app="myApp">
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+</head>
+<body>
+<div ng-controller="myCtrl">
+<h2>$http试验</h2>
+	<input type="button" ng-click="resetDays()" value="初始化日期">
+	{{status}}
+
+	<h3> 可用日期 </h3>
+	<div ng-repeat="day in days">
+		{{day}}
+		[<span ng-click="removeDay(day)">删除</span>]
+	</div>
+
+</div>
+
+
+<script src="angular.min.1.2.js"></script>
+<script>
+	angular.module('myApp',[])
+		.controller('myCtrl',['$scope','$http',function ($scope,$http) {
+			$scope.days=[];
+			$scope.status="";
+			$scope.removeDay=function (deleteDay) {
+				$http.post('/remove/day',{day:deleteDay})
+					.success(function (data,status,headers,config) {
+						$scope.days = data;
+					})
+					.error(function (data,status,headers,config) {
+						$scope.status = data.msg;
+					});
+			};
+			$scope.resetDays=function () {
+				$scope.status="";
+				$http.get('/reset/days')
+					.success(function (data,status,headers,config) {
+						$scope.days=data;
+					})
+					.error(function (data,status,headers,config) {
+						$scope.status=data;
+					})
+			}
+		}])
+</script>
+</body>
+</html>

@@ -571,6 +571,66 @@ ng-value|规定 input 元素的值
 	
  例子： 自定义指令试验
  示例参见: static/自定义指令试验.html		static/自定义指令试验子页面.html
+ 
+ 
+* 常用的内置服务
+
+服务|说明
+:---|:---
+$animate|提供动画钩子，来同时链接到以CSS和JavaScript为基础的动画
+$cacheFactory|提供把键值对放置到对象缓存的能力
+$compile|把html字符串和dom对象编译为模板,并制作可以把作用域和模板连接在一起的模板函数的能力
+$cookies|提供对浏览器的cookie的读写访问
+$document|指定一个对浏览器的window.document元素的JQuery包装的引用
+$http|提供一个简单易用的功能来把http请求发送到web服务器或者其他服务
+$interval|提供 window.setInterval
+$locale|提供由各种Angularjs组件使用的本地化规则
+$location|提供与浏览器的window.location对象交互的能力
+$resource|允许你创建一个可以与一个restful服务器端数据源进行交互的对象
+$rootElement|提供对angularjs应用程序中的根元素的访问
+$rootScope|提供对angularjs应用程序的根作用域的访问
+$route|通过监视$location.url()并把路径映射到现有的路由定义来提供用于控制器和视图的深度连接url
+$sce|提供严格的上写完转义函数，用于处理来自不受信任来源的数据
+$templateCache|提供把模板从web服务器读取到缓存供以后使用的能力
+$timeout|提供window。setTimeout
+$window|指定一个对浏览器window元素的jQuery包装的引用
+
+* $http服务
+	delete(url,[config])
+	get(url,[config])
+	head(url,[config])
+	jsonp(url,[config])
+	post(url,data,[config])
+	put(url,data,[config])
+	
+	说明：url参数是要请求的url。可选的config参数，是一个JavaScript对象，可以指定请求时要是有的选项。
+	除了使用上边的快捷方法，还可以使用$http(config)的方法，其中config里，配置好method和url等。
+	
+ 可在$http服务请求的config参数中定义的属性
+
+属性|说明
+:---|:---
+method|http方法，比如GET或POST
+url|被请求的资源的URL
+params|要被发送的参数，可以使一个对象，也可以是 "?key1=val1&key2=val2&..." 格式的字符串
+data|要作为请求内容发送的数据
+headers|要随请求发送的标头
+xsrfHeaderName|要用XSRF令牌填充的http标头的名称
+xsrfCookieName|包含XSRF令牌的cookie的名称
+transformRequest|被调用来转换/序列化请求标头和正文的函数。该函数接受正文数据作为第一个参数和一个通过名字来获取标头的获取器函数作为第二个参数。如 function(data,getHeader)
+transformResponse|被调用来转换/序列化响应标头和正文的函数。该函数接受正文数据作为第一个参数和一个通过名字来获取标头的获取器函数作为第二个参数。
+cache|布尔值，如果true，则表示默认将$http缓存用于get的响应；如果一个缓存实例是用$cacheFactory建立的，则该缓存实例用于缓存响应；如果false，并且没有建立$cacheFactory,则响应不会被缓存
+timeout|超时时间，单位毫秒
+withCredentials|布尔值，如果true，则表示该XHR对象上的withCredentials标志被设置
+responseType|期望的响应类型，如json或text
+
+ 当理由$http对象调用请求的方法时，你会取回一个带有promise(翻译为 许诺)方法 success()和error()的对象。你可以向这些方法传递回调函数，如果请求成功或失败，回调会被调用。这些回调函数，接受 data,status,header,config为参数。（响应数据、响应状态、响应头、请求配置）
+ 
+例子： 使用$http实现get和post的express服务器
+示例参见:  使用$http实现get和post/
+	
+
+   
 				
 * 购物车试验
 
