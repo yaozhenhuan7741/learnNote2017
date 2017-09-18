@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" data-ng-app="myApp">
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+</head>
+<body>
+<div ng-controller="myCtrl">
+	<h3>cookie测试</h3>
+	<input type="radio" value="大白兔奶糖" ng-model="favCookie" ng-change="setCookie()">大白兔奶糖 <br>
+	<input type="radio" value="夹心饼干" ng-model="favCookie" ng-change="setCookie()">夹心饼干 <br>
+	<input type="radio" value="薯片" ng-model="favCookie" ng-change="setCookie()">薯片 <br>
+	<input type="radio" value="None" ng-model="favCookie" ng-change="setCookie()">None <br>
+	<hr>
+	Cookies: {{ myFavCookie }}
+
+</div>
+
+
+<script src="js/angular-1.2.13/angular.min.js"></script>
+<script src="js/angular-1.2.13/angular-cookies.min.js"></script>
+<script>
+angular.module('myApp',['ngCookies'])
+	.controller('myCtrl',['$scope','$cookieStore',function ($scope,cookieStore) {
+		$scope.favCookie='';
+		$scope.myFavCookie='';
+		$scope.setCookie =function () {
+			if ($scope.favCookie === 'None'){
+				cookieStore.remove('myAppCookie');
+			}else{
+				cookieStore.put('myAppCookie',{flavor:$scope.favCookie});
+			}
+			$scope.myFavCookie=cookieStore.get('myAppCookie');
+		}
+	}])
+
+</script>
+</body>
+</html>

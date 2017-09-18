@@ -217,6 +217,17 @@ angularjs模块被实现为两个阶段:配置阶段和运行阶段
 
 	工厂、服务等，示例参见：  static/工厂服务和多控制器数据共享试验.html
 	
+* value	
+
+	 angular.module('myApp',[])
+	 .value(name,object);
+	 
+	 name 是名称，object是任何JavaScript对象。
+	 
+* constant
+	
+	与value类似，但是，constant服务在构建Module对象的配置阶段可用，value不行------constant执行的比较早。	 
+	
 * 作用域的声明周期
 
 	1. 创建
@@ -628,6 +639,44 @@ responseType|期望的响应类型，如json或text
  
 例子： 使用$http实现get和post的express服务器
 示例参见:  使用$http实现get和post/
+
+* 使用$cacheFactory服务
+	$cacheFactory服务提供了一个非常方便的存储库，用于暂时存储数据的键值对。
+	而且可以指定一个options对象，包含capacity属性，用于限制缓存中行的最大数量-----封顶集合
+	
+例子： 	使用$cacheFactory服务
+示例参见： static/使用cacheFactory服务.js
+
+* 使用$cookieStore服务与浏览器cookie交互
+	angularjs提供了获取和设置cookie的一对服务，$cookie和$cookieStore.
+	
+	$cookie服务在浏览器中提供临时存储，并且再用户离开网页或关闭浏览器后也继续存在。
+	$cookieStore服务提供get()/put()/remove()函数来获取、设置和删除cookie.
+	
+	使用$cookie和$cookieStore服务，需要先加载angular.js 然后加载 angular-cookies.js，然后加载自己的js.
+	
+例子： 	使用$cookie和$cookieStore与浏览器交互
+示例参见: static/使用$cookie和$cookieStore与浏览器交互.html
+
+* 使用$interval 和 $timeout 服务实现定时器
+  语法：
+  $interval(callback,delay,[count],[invokeApply]);
+  $timeout(callback,delay,[invokeApply]);
+  
+  callback:在延迟已过期时执行
+  delay:执行回调之前，等待的毫秒数
+  count: 重复次数
+  invokeApply:布尔值，默认true，导致该函数只在Angularjs事件循环的$apply中执行。
+  
+  取消，使用var xxx=$interval(...);  $interval.cancel(xxx);
+  
+  显示的销毁定时器：
+  $scope.on('$destroy',function(){
+    $interval.cancel(xxx)
+  })
+  
+* 动画钩子 $animate 略----不作为学习的重点  
+	
 	
 
    
